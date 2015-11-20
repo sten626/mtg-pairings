@@ -2,9 +2,26 @@
 var express = require('express');
 var app = express();
 var port = process.env.PORT || 8080;
+var environment = process.env.NODE_ENV;
 
-app.use(express.static(__dirname + '/public'));
-app.use('/bower_components', express.static(__dirname + '/bower_components'));
+console.log('Starting up node');
+console.log('PORT=' + port);
+console.log('NODE_ENV=' + environment);
 
-app.listen(port);
-console.log('App listening on port ' + port);
+switch (environment) {
+case 'production':
+  console.log('** PRODUCTION **');
+  console.log('Serving from ./build/');
+  //process.chdir('./../../');
+  app.use('/', express.static('./build/'));
+  break;
+default:
+  console.log('** DEV **');
+  console.log('Serving from ./src/client/ and ./');
+  app.use('/', express.static('./src/client/'));
+  app.use('/', express.static('./'));
+}
+
+app.listen(port, function() {
+  console.log('Express server listening on port ' + port);
+});
