@@ -4,9 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE-Edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Test</title>
+    <title>MTG Pairings</title>
+    <base href="/">
 
+    <!-- Vendor CSS -->
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+
+    <!-- My CSS -->
+    <link rel="stylesheet" href="/src/client/content/styles.css">
 
     <!-- Vendor JS -->
     <script src="/bower_components/jquery/dist/jquery.min.js"></script>
@@ -16,6 +21,15 @@
 
     <!-- Main Module -->
     <script src="/src/client/app/mtgPairings.module.js"></script>
+
+    <!-- Reusable Blocks/Modules -->
+
+    <!-- Core Module -->
+    <script src="/src/client/app/core/core.module.js"></script>
+
+    <!-- Home Module -->
+    <script src="/src/client/app/home/home.module.js"></script>
+    <script src="/src/client/app/home/home.routes.js"></script>
   </head>
   <body>
     <nav class="navbar navbar-default navbar-fixed-top">
@@ -37,5 +51,8 @@
         </div>
       </div>
     </nav>
+
+    <div class="container">
+      <div ui-view></div>
   </body>
 </html>
