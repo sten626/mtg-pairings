@@ -4,7 +4,7 @@
   angular
     .module('mtgPairings.home')
     .config(routeConfig);
-  
+
   routeConfig.$inject = ['$locationProvider', '$stateProvider'];
 
   function routeConfig($locationProvider, $stateProvider) {
@@ -13,7 +13,7 @@
     $stateProvider
       .state('home', {
         url: '/',
-        templateUrl: 'src/client/app/home/home.html'
+        templateUrl: 'app/home/home.html'
       });
   }
 })();
