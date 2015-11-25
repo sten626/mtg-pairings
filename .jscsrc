@@ -27,7 +27,7 @@
     "requireReturnTypes": true,
     "checkTypes": true,
     "checkRedundantAccess": true,
-    "enforeceExistence": true,
+    "enforceExistence": true,
     "requireNewlineAfterDescription": true,
     "requireDescriptionCompleteSentence": true,
     "requireParamDescription": true,
