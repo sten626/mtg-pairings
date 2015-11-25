@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h1>Players</h1>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="active-player-name" class="sr-only">New player name</label>
+          <input id="active-player-name" class="form-control" type="text" placeholder="Name" ng-model="swiss.activePlayer.name">
+        </div>
+        <button type="button" class="btn btn-default" ng-disabled="!swiss.activePlayer.name" ng-click="swiss.addPlayer()">Add Player</button>
+      </div>
+
+      <div class="col-sm-6">
+        <table class="table table-striped" ng-show="swiss.players.length > 0">
+          <thead>
+            <tr>
+              <th>Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="player in swiss.players">
+              <td>{{player.name}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
