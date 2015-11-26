@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="col-sm-6">
+    <div class="form-group">
+      <label for="active-player-name" class="sr-only">New player name</label>
+      <input id="active-player-name" class="form-control" type="text" placeholder="Name" ng-model="swiss.activePlayer.name">
+    </div>
+    <button type="button"
+        class="btn btn-default"
+        ng-disabled="!swiss.activePlayer.name"
+        ng-click="swiss.savePlayer()">{{swiss.addButtonText}}</button>
+  </div>
+
+  <div class="col-sm-6">
+    <div class="list-group" ng-show="swiss.players.length > 0">
+      <a class="list-group-item"
+          ng-repeat="player in swiss.players"
+          ng-class="{active: swiss.activePlayer === player}"
+          ng-click="swiss.editPlayer(player)">
+        {{player.name}}
+        <button class="close" type="button" aria-label="close" ng-click="swiss.removePlayer(player)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </a>
+    </div>
+  </div>
+</div>
