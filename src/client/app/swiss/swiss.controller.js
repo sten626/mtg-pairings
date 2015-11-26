@@ -14,6 +14,7 @@
     vm.activePlayer = {name: ''};
     vm.addButtonText = 'Add Player';
     vm.editPlayer = editPlayer;
+    vm.numberOfRounds = 3;
     vm.players = [];
     vm.removePlayer = removePlayer;
     vm.savePlayer = savePlayer;
@@ -39,6 +40,34 @@
     }
 
     /**
+     * Function for calculating the recommended number of rounds based on number
+     * of players.
+     *
+     * @return {number} The recommended number of rounds.
+     */
+    function getRecommendedNumberOfRounds() {
+      var playersCount = vm.players.length;
+
+      if (playersCount <= 8) {
+        return 3;
+      } else if (playersCount <= 16) {
+        return 4;
+      } else if (playersCount <= 32) {
+        return 5;
+      } else if (playersCount <= 64) {
+        return 6;
+      } else if (playersCount <= 128) {
+        return 7;
+      } else if (playersCount <= 256) {
+        return 8;
+      } else if (playersCount <= 512) {
+        return 9;
+      } else {
+        return 10;
+      }
+    }
+
+    /**
      * Remove a player from the players array.
      *
      * @param  {Object} player The player to be removed from the array.
@@ -57,6 +86,7 @@
     function savePlayer() {
       if (vm.players.indexOf(vm.activePlayer) === -1) {
         vm.players.push(vm.activePlayer);
+        vm.numberOfRounds = getRecommendedNumberOfRounds();
       }
 
       clearActivePlayer();
