@@ -2,8 +2,13 @@
   <div class="col-xs-12">
     <div class="swiss-menu">
       <ul class="nav nav-pills">
-        <li role="presentation" ng-class="{active: $state.includes('swiss.players')}"><a>Players</a></li>
-        <li role="presentation"><a>Pickles</a></li>
+        <li role="presentation" ng-class="{active: $state.includes('swiss.players')}">
+          <a ui-sref="swiss.players">Players</a>
+        </li>
+        <li role="presentation"
+            ng-class="{active: $state.includes('swiss.rounds'), disabled: !swiss.currentRound}">
+          <a ui-sref="swiss.rounds">Rounds</a>
+        </li>
       </ul>
     </div>
     <div ui-view></div>

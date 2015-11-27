@@ -5,14 +5,20 @@
     .module('mtgPairings.swiss')
     .controller('SwissController', SwissController);
 
+  SwissController.$inject = ['$state'];
+
   /**
    * Controller for the Swiss views.
+   *
+   * @param {Object} $state ui-router's state object.
    */
-  function SwissController() {
+  function SwissController($state) {
     var vm = this;
 
     vm.activePlayer = {name: ''};
     vm.addButtonText = 'Add Player';
+    vm.begin = begin;
+    vm.createMatches = createMatches;
     vm.editPlayer = editPlayer;
     vm.numberOfRounds = 3;
     vm.players = [];
@@ -22,11 +28,60 @@
     ////////////
 
     /**
+     * Begin's the tournement.
+     */
+    function begin() {
+      vm.currentRound = 1;
+      vm.matches = {};
+      $state.go('swiss.rounds');
+    }
+
+    /**
      * Clears the active player object.
      */
     function clearActivePlayer() {
       vm.activePlayer = {name: ''};
       vm.addButtonText = 'Add Player';
+    }
+
+    /**
+     * Generate pairings for a given round.
+     *
+     * @param  {number} round The round number to calculate pairings for.
+     */
+    function createMatches(round) {
+      var players;
+      var tableNumber = 1;
+
+      vm.matches[round] = [];
+
+      if (round === 1) {
+        players = shufflePlayers();
+
+        while (players.length >= 2) {
+          vm.matches[round].push({
+            table: tableNumber,
+            player1: players[0],
+            player1Result: 'Awaiting Result',
+            player2: players[1],
+            player2Result: 'Awaiting Result'
+          });
+
+          players.splice(0, 2);
+          tableNumber += 1;
+        }
+
+        if (players.length === 1) {
+          // Odd number of players, give a bye.
+          vm.matches[round].push({
+            table: tableNumber,
+            player1: players[0],
+            player1Result: '2/0/0',
+            player2: {name: 'BYE'},
+            player2Result: '0/2/0'
+          });
+        }
+      }
     }
 
     /**
@@ -46,25 +101,30 @@
      * @return {number} The recommended number of rounds.
      */
     function getRecommendedNumberOfRounds() {
-      var playersCount = vm.players.length;
+      return Math.max(Math.ceil(Math.log2(vm.players.length)), 3);
+    }
 
-      if (playersCount <= 8) {
-        return 3;
-      } else if (playersCount <= 16) {
-        return 4;
-      } else if (playersCount <= 32) {
-        return 5;
-      } else if (playersCount <= 64) {
-        return 6;
-      } else if (playersCount <= 128) {
-        return 7;
-      } else if (playersCount <= 256) {
-        return 8;
-      } else if (playersCount <= 512) {
-        return 9;
-      } else {
-        return 10;
+    /**
+     * Shuffles the players array and returns a shallow copy.
+     *
+     * @return {Array} A shuffled shallow copy of the players array.
+     */
+    function shufflePlayers() {
+      var currentIndex = vm.players.length;
+      var playersCopy = vm.players.slice();
+      var randomIndex;
+      var tempValue;
+
+      while (currentIndex !== 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        tempValue = playersCopy[currentIndex];
+        playersCopy[currentIndex] = playersCopy[randomIndex];
+        playersCopy[randomIndex] = tempValue;
       }
+
+      return playersCopy;
     }
 
     /**

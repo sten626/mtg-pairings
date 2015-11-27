@@ -24,6 +24,10 @@
       .state('swiss.players', {
         url: '',
         templateUrl: 'app/swiss/swiss.players.html'
+      })
+      .state('swiss.rounds', {
+        url: '/rounds',
+        templateUrl: 'app/swiss/swiss.rounds.html'
       });
   }
 })();

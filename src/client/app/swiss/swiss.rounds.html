@@ -1,0 +1,38 @@
+<div class="row">
+  <div class="col-xs-12">
+    <div class="form-inline">
+      <div class="form-group">
+        <label for="roundNumber">Round</label>
+        <select id="roundNumber" class="form-control">
+          <option>1</option>
+        </select>
+      </div>
+
+      <button class="btn btn-default" ng-click="swiss.createMatches(1)">Create Matches</button>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Table</th>
+          <th>Player 1</th>
+          <th>Player 1 Result</th>
+          <th>Player 2</th>
+          <th>Player 2 Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="match in swiss.matches[1]">
+          <td>{{match.table}}</td>
+          <td>{{match.player1.name}}</td>
+          <td>{{match.player1Result}}</td>
+          <td>{{match.player2.name}}</td>
+          <td>{{match.player2Result}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
