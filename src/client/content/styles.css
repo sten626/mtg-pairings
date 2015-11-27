@@ -4,3 +4,6 @@ body {
 .swiss-menu {
   margin-bottom: 20px;
 }
+.match-result-buttons button {
+  height: 6em;
+}

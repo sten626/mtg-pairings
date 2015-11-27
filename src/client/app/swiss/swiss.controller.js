@@ -18,12 +18,16 @@
     vm.activePlayer = {name: ''};
     vm.addButtonText = 'Add Player';
     vm.begin = begin;
+    vm.checkForPlayers = checkForPlayers;
     vm.createMatches = createMatches;
     vm.editPlayer = editPlayer;
+    vm.matchData = [];
     vm.numberOfRounds = 3;
     vm.players = [];
     vm.removePlayer = removePlayer;
     vm.savePlayer = savePlayer;
+    vm.setActiveMatch = setActiveMatch;
+    vm.submitMatchResult = submitMatchResult;
 
     ////////////
 
@@ -31,9 +35,27 @@
      * Begin's the tournement.
      */
     function begin() {
-      vm.currentRound = 1;
-      vm.matches = {};
+      vm.currentRound = {
+        round: 1,
+        matches: []
+      };
+      vm.matchData.push(vm.currentRound);
+
       $state.go('swiss.rounds');
+    }
+
+    /**
+     * Checks if players has been populated, and if not redirects back.
+     *
+     * @return {boolean} True if players has been populated.
+     */
+    function checkForPlayers() {
+      if (vm.players.length > 0) {
+        return true;
+      }
+
+      $state.go('swiss.players');
+      return false;
     }
 
     /**
@@ -46,25 +68,24 @@
 
     /**
      * Generate pairings for a given round.
-     *
-     * @param  {number} round The round number to calculate pairings for.
      */
-    function createMatches(round) {
+    function createMatches() {
       var players;
       var tableNumber = 1;
 
-      vm.matches[round] = [];
-
-      if (round === 1) {
+      if (vm.currentRound.round === 1) {
         players = shufflePlayers();
 
         while (players.length >= 2) {
-          vm.matches[round].push({
+          vm.currentRound.matches.push({
             table: tableNumber,
             player1: players[0],
+            player1GameWins: 0,
             player1Result: 'Awaiting Result',
             player2: players[1],
-            player2Result: 'Awaiting Result'
+            player2GameWins: 0,
+            player2Result: 'Awaiting Result',
+            draws: 0
           });
 
           players.splice(0, 2);
@@ -73,12 +94,15 @@
 
         if (players.length === 1) {
           // Odd number of players, give a bye.
-          vm.matches[round].push({
+          vm.currentRound.matches.push({
             table: tableNumber,
             player1: players[0],
-            player1Result: '2/0/0',
+            player1GameWins: 2,
+            player1Result: 'Awaiting Result',
             player2: {name: 'BYE'},
-            player2Result: '0/2/0'
+            player2GameWins: 0,
+            player2Result: 'Awaiting Result',
+            draws: 0
           });
         }
       }
@@ -150,6 +174,35 @@
       }
 
       clearActivePlayer();
+    }
+
+    /**
+     * Sets the active match.
+     *
+     * @param {Object} match The match to set as active.
+     */
+    function setActiveMatch(match) {
+      vm.activeMatch = match;
+    }
+
+    /**
+     * Submit the match results for the active match, from player 1's
+     * perspective.
+     *
+     * @param  {number} wins   The number of game wins for player 1.
+     * @param  {number} losses The number of game wins for player 2.
+     * @param  {number} draws  The number of draws between the players.
+     */
+    function submitMatchResult(wins, losses, draws) {
+      if (!draws) {
+        draws = 0;
+      }
+
+      vm.activeMatch.player1GameWins = wins;
+      vm.activeMatch.player2GameWins = losses;
+      vm.activeMatch.draws = draws;
+      vm.activeMatch.player1Result = wins + '/' + losses + '/' + draws;
+      vm.activeMatch.player2Result = losses + '/' + wins + '/' + draws;
     }
   }
 })();
