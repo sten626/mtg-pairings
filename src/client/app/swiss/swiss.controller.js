@@ -18,15 +18,16 @@
     vm.activePlayer = {name: ''};
     vm.addButtonText = 'Add Player';
     vm.begin = begin;
-    vm.checkForPlayers = checkForPlayers;
     vm.createMatches = createMatches;
     vm.editPlayer = editPlayer;
     vm.matchData = [];
     vm.numberOfRounds = 3;
+    vm.outstandingFilter = outstandingFilter;
     vm.players = [];
     vm.removePlayer = removePlayer;
     vm.savePlayer = savePlayer;
     vm.setActiveMatch = setActiveMatch;
+    vm.showOutstanding = true;
     vm.submitMatchResult = submitMatchResult;
 
     ////////////
@@ -45,17 +46,10 @@
     }
 
     /**
-     * Checks if players has been populated, and if not redirects back.
-     *
-     * @return {boolean} True if players has been populated.
+     * Clears the active match.
      */
-    function checkForPlayers() {
-      if (vm.players.length > 0) {
-        return true;
-      }
-
-      $state.go('swiss.players');
-      return false;
+    function clearActiveMatch() {
+      vm.activeMatch = null;
     }
 
     /**
@@ -85,7 +79,8 @@
             player2: players[1],
             player2GameWins: 0,
             player2Result: 'Awaiting Result',
-            draws: 0
+            draws: 0,
+            complete: false
           });
 
           players.splice(0, 2);
@@ -102,7 +97,8 @@
             player2: {name: 'BYE'},
             player2GameWins: 0,
             player2Result: 'Awaiting Result',
-            draws: 0
+            draws: 0,
+            complete: false
           });
         }
       }
@@ -126,6 +122,21 @@
      */
     function getRecommendedNumberOfRounds() {
       return Math.max(Math.ceil(Math.log2(vm.players.length)), 3);
+    }
+
+    /**
+     * Filters matches for outstanding checkbox.
+     *
+     * @param  {Object}  match The match to check for the filter.
+     * @return {boolean}       True if we should show the match, false
+     *                         otherwise.
+     */
+    function outstandingFilter(match) {
+      if (vm.showOutstanding && match.complete) {
+        return false;
+      }
+
+      return true;
     }
 
     /**
@@ -203,6 +214,9 @@
       vm.activeMatch.draws = draws;
       vm.activeMatch.player1Result = wins + '/' + losses + '/' + draws;
       vm.activeMatch.player2Result = losses + '/' + wins + '/' + draws;
+      vm.activeMatch.complete = true;
+
+      clearActiveMatch();
     }
   }
 })();
