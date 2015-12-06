@@ -15,7 +15,10 @@
   function SwissController($state) {
     var vm = this;
 
-    vm.activePlayer = {name: ''};
+    vm.activePlayer = {
+      name: '',
+      dropped: false
+    };
     vm.addButtonText = 'Add Player';
     vm.begin = begin;
     vm.clearActiveMatchResult = clearActiveMatchResult;
@@ -72,7 +75,11 @@
      * Clears the active player object.
      */
     function clearActivePlayer() {
-      vm.activePlayer = {name: ''};
+      vm.activePlayer = {
+        name: '',
+        dropped: false
+      };
+
       vm.addButtonText = 'Add Player';
     }
 
