@@ -30,6 +30,11 @@
     <!-- Home Module -->
     <script src="/src/client/app/home/home.module.js"></script>
     <script src="/src/client/app/home/home.routes.js"></script>
+
+    <!-- Swiss Module -->
+    <script src="/src/client/app/swiss/swiss.module.js"></script>
+    <script src="/src/client/app/swiss/swiss.routes.js"></script>
+    <script src="/src/client/app/swiss/swiss.controller.js"></script>
   </head>
   <body>
     <nav class="navbar navbar-default navbar-fixed-top">
@@ -45,7 +50,7 @@
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse">
           <ul class="nav navbar-nav">
-            <li ng-class="{active: $state.includes('swiss')}"><a ui-sref="swiss">Swiss</a></li>
+            <li ng-class="{active: $state.includes('swiss')}"><a ui-sref="swiss.players">Swiss</a></li>
             <li><a href="">Pickles</a></li>
           </ul>
         </div>

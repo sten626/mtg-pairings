@@ -1,0 +1,17 @@
+<div class="row">
+  <div class="col-xs-12">
+    <div class="swiss-menu">
+      <ul class="nav nav-pills">
+        <li role="presentation" ui-sref-active-eq="active">
+          <a ui-sref="swiss.players">Players</a>
+        </li>
+        <li role="presentation"
+            ui-sref-active-eq="active"
+            ng-show="swiss.currentRound">
+          <a ui-sref="swiss.rounds">Rounds</a>
+        </li>
+      </ul>
+    </div>
+    <div ui-view></div>
+  </div>
+</div>

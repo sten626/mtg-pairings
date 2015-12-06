@@ -1,0 +1,46 @@
+<div class="row">
+  <div class="col-sm-6">
+    <div class="form-group">
+      <label for="active-player-name" class="sr-only">New player name</label>
+      <input id="active-player-name" class="form-control" type="text" placeholder="Name" ng-model="swiss.activePlayer.name">
+    </div>
+    <button type="button"
+        class="btn btn-default"
+        ng-disabled="!swiss.activePlayer.name"
+        ng-click="swiss.savePlayer()">{{swiss.addButtonText}}</button>
+  </div>
+
+  <div class="col-sm-6">
+    <div class="list-group" ng-show="swiss.players.length > 0">
+      <a class="list-group-item"
+          ng-repeat="player in swiss.players"
+          ng-class="{active: swiss.activePlayer === player}"
+          ng-click="swiss.editPlayer(player)">
+        {{player.name}}
+        <button class="close" type="button" aria-label="close" ng-click="swiss.removePlayer(player)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </a>
+    </div>
+    
+    <div class="form-horizontal" ng-show="swiss.players.length > 0">
+      <div class="form-group">
+        <label for="number-of-rounds" class="col-sm-4 control-label">Number of Rounds</label>
+        <div class="col-sm-2">
+          <input type="number" class="form-control" id="number-of-rounds" min="3" ng-value="swiss.numberOfRounds">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-4 col-sm-offset-4">
+          <button class="btn btn-default"
+              type="button"
+              ng-disabled="swiss.players.length < 4"
+              ng-click="swiss.begin()">
+            Begin
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

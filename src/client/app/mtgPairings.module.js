@@ -6,6 +6,7 @@
     'mtgPairings.core',
 
     // Feature Modules
-    'mtgPairings.home'
+    'mtgPairings.home',
+    'mtgPairings.swiss'
   ]);
 })();

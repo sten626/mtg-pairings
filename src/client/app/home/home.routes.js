@@ -3,23 +3,36 @@
 
   angular
     .module('mtgPairings.home')
-    .config(routeConfig);
+    .config(stateConfig)
+    .run(stateRun);
 
-  routeConfig.$inject = ['$locationProvider', '$stateProvider'];
+  stateConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
 
   /**
    * Configure the home state.
    *
-   * @param  {Object} $locationProvider Angular's location provider.
-   * @param  {Object} $stateProvider    Angular's state provider.
+   * @param  {Object} $stateProvider     Angular's state provider.
+   * @param  {Object} $urlRouterProvider Angular's url router provider.
    */
-  function routeConfig($locationProvider, $stateProvider) {
-    $locationProvider.html5Mode(true);
+  function stateConfig($stateProvider, $urlRouterProvider) {
+    $urlRouterProvider.otherwise('/');
 
     $stateProvider
       .state('home', {
         url: '/',
         templateUrl: 'app/home/home.html'
       });
+  }
+
+  stateRun.$inject = ['$rootScope', '$state'];
+
+  /**
+   * Add the state to the root scope.
+   *
+   * @param  {Object} $rootScope Angular's root scope.
+   * @param  {Object} $state     Angular's state object.
+   */
+  function stateRun($rootScope, $state) {
+    $rootScope.$state = $state;
   }
 })();
