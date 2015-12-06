@@ -18,12 +18,16 @@
     vm.activePlayer = {name: ''};
     vm.addButtonText = 'Add Player';
     vm.begin = begin;
+    vm.clearActiveMatchResult = clearActiveMatchResult;
     vm.createMatches = createMatches;
+    vm.deleteResults = deleteResults;
     vm.editPlayer = editPlayer;
+    vm.isMatchSubmitDisabled = isMatchSubmitDisabled;
     vm.matchData = [];
     vm.numberOfRounds = 3;
     vm.outstandingFilter = outstandingFilter;
     vm.players = [];
+    vm.redoMatches = redoMatches;
     vm.removePlayer = removePlayer;
     vm.savePlayer = savePlayer;
     vm.setActiveMatch = setActiveMatch;
@@ -50,6 +54,18 @@
      */
     function clearActiveMatch() {
       vm.activeMatch = null;
+    }
+
+    /**
+     * Clears the result of the active match.
+     */
+    function clearActiveMatchResult() {
+      vm.activeMatch.player1GameWins = 0;
+      vm.activeMatch.player1Result = 'Awaiting Result';
+      vm.activeMatch.player2GameWins = 0;
+      vm.activeMatch.player2Result = 'Awaiting Result';
+      vm.activeMatch.draws = 0;
+      vm.activeMatch.complete = false;
     }
 
     /**
@@ -93,15 +109,31 @@
             table: tableNumber,
             player1: players[0],
             player1GameWins: 2,
-            player1Result: 'Awaiting Result',
-            player2: {name: 'BYE'},
+            player1Result: '***Bye***',
+            player2: {name: ''},
             player2GameWins: 0,
-            player2Result: 'Awaiting Result',
+            player2Result: '',
             draws: 0,
-            complete: false
+            complete: true
           });
+
+          vm.showOutstanding = false;
         }
       }
+    }
+
+    /**
+     * Delete all the results for the current round.
+     */
+    function deleteResults() {
+      vm.currentRound.matches.forEach(function(match) {
+        match.player1GameWins = 0;
+        match.player1Result = 'Awaiting Result';
+        match.player2GameWins = 0;
+        match.player2Result = 'Awaiting Result';
+        match.draws = 0;
+        match.complete = false;
+      });
     }
 
     /**
@@ -125,10 +157,33 @@
     }
 
     /**
+     * Controls if the match submit button is enabled or not.
+     *
+     * @return {Boolean} True if button should be disabled, false otherwise.
+     */
+    function isMatchSubmitDisabled() {
+      if (vm.activeMatch) {
+        if (vm.activeMatch.player1GameWins +
+            vm.activeMatch.player2GameWins +
+            vm.activeMatch.draws === 0) {
+          return true;
+        }
+
+        if (vm.activeMatch.player1GameWins +
+            vm.activeMatch.player2GameWins +
+            vm.activeMatch.draws > 3) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    /**
      * Filters matches for outstanding checkbox.
      *
      * @param  {Object}  match The match to check for the filter.
-     * @return {boolean}       True if we should show the match, false
+     * @return {Boolean}       True if we should show the match, false
      *                         otherwise.
      */
     function outstandingFilter(match) {
@@ -140,26 +195,10 @@
     }
 
     /**
-     * Shuffles the players array and returns a shallow copy.
-     *
-     * @return {Array} A shuffled shallow copy of the players array.
+     * Clears the pairings for the current round.
      */
-    function shufflePlayers() {
-      var currentIndex = vm.players.length;
-      var playersCopy = vm.players.slice();
-      var randomIndex;
-      var tempValue;
-
-      while (currentIndex !== 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-
-        tempValue = playersCopy[currentIndex];
-        playersCopy[currentIndex] = playersCopy[randomIndex];
-        playersCopy[randomIndex] = tempValue;
-      }
-
-      return playersCopy;
+    function redoMatches() {
+      vm.currentRound.matches = [];
     }
 
     /**
@@ -193,7 +232,32 @@
      * @param {Object} match The match to set as active.
      */
     function setActiveMatch(match) {
-      vm.activeMatch = match;
+      if (match.player1Result !== '***Bye***') {
+        vm.activeMatch = match;
+      }
+    }
+
+    /**
+     * Shuffles the players array and returns a shallow copy.
+     *
+     * @return {Array} A shuffled shallow copy of the players array.
+     */
+    function shufflePlayers() {
+      var currentIndex = vm.players.length;
+      var playersCopy = vm.players.slice();
+      var randomIndex;
+      var tempValue;
+
+      while (currentIndex !== 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        tempValue = playersCopy[currentIndex];
+        playersCopy[currentIndex] = playersCopy[randomIndex];
+        playersCopy[randomIndex] = tempValue;
+      }
+
+      return playersCopy;
     }
 
     /**

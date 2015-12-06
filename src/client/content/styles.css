@@ -4,6 +4,18 @@ body {
 .swiss-menu {
   margin-bottom: 20px;
 }
+.swiss-search-row {
+  margin-bottom: 10px;
+}
+.swiss-match-options-row {
+  margin-bottom: 15px;
+}
+.swiss-match-options-row .checkbox {
+  line-height: 2.5;
+}
+.swiss-match-options-row button {
+  margin-left: 5px;
+}
 .match-result-buttons button {
   height: 6em;
 }
