@@ -28,13 +28,17 @@
     vm.isMatchSubmitDisabled = isMatchSubmitDisabled;
     vm.matchData = [];
     vm.numberOfRounds = 3;
-    vm.outstandingFilter = outstandingFilter;
     vm.players = [];
     vm.redoMatches = redoMatches;
     vm.removePlayer = removePlayer;
+    vm.roundsFilter = roundsFilter;
     vm.savePlayer = savePlayer;
+    vm.searchQuery = '';
     vm.setActiveMatch = setActiveMatch;
     vm.showOutstanding = true;
+    vm.showStandingsPill = false;
+    vm.standingsSearch = '';
+    vm.standingsSearchFilter = standingsSearchFilter;
     vm.submitMatchResult = submitMatchResult;
 
     ////////////
@@ -69,6 +73,11 @@
       vm.activeMatch.player2Result = 'Awaiting Result';
       vm.activeMatch.draws = 0;
       vm.activeMatch.complete = false;
+      vm.currentRound.complete = false;
+
+      if (vm.currentRound.round === 1) {
+        vm.showStandingsPill = false;
+      }
     }
 
     /**
@@ -123,8 +132,6 @@
             draws: 0,
             complete: true
           });
-
-          vm.showOutstanding = false;
         }
       }
     }
@@ -141,6 +148,12 @@
         match.draws = 0;
         match.complete = false;
       });
+
+      vm.currentRound.complete = false;
+
+      if (vm.currentRound.round === 1) {
+        vm.showStandingsPill = false;
+      }
     }
 
     /**
@@ -151,6 +164,141 @@
     function editPlayer(player) {
       vm.activePlayer = player;
       vm.addButtonText = 'Save Player';
+    }
+
+    /**
+     * Generates opponents match win and game win percentages for a player.
+     *
+     * @param  {Object} player The player to make calculations for.
+     */
+    function generateOpponentStats(player) {
+      var opponentsMatchWinPercentageSum = 0;
+      var opponentsGameWinPercentageSum = 0;
+      var opponentsCount = player.opponents.length;
+
+      if (opponentsCount > 0) {
+        player.opponents.forEach(function(opponent) {
+          var matchPoints = opponent.matchPoints;
+          var potentialMatchPoints = opponent.matchesPlayed * 3;
+          var gamePoints = opponent.gamePoints;
+          var potentialGamePoints = opponent.gamesPlayed * 3;
+          opponentsMatchWinPercentageSum += Math.max(
+            matchPoints / potentialMatchPoints,
+            1 / 3);
+          opponentsGameWinPercentageSum += gamePoints / potentialGamePoints;
+        });
+
+        player.opponentsMatchWinPercentage = +(opponentsMatchWinPercentageSum /
+            opponentsCount * 100).toFixed(2);
+        player.opponentsGameWinPercentage = +(opponentsGameWinPercentageSum /
+            opponentsCount * 100).toFixed(2);
+      }
+      else {
+        // Player has only had a bye.
+        player.opponentsMatchWinPercentage = 0;
+        player.opponentsGameWinPercentage = 0;
+      }
+    }
+
+    /**
+     * Calculates match and game stats for a player.
+     *
+     * @param  {Object} player The player to get stats for.
+     */
+    function generatePlayerStats(player) {
+      player.matchPoints = 0;
+      player.matchWins = 0;
+      player.matchLosses = 0;
+      player.matchDraws = 0;
+      player.matchByes = 0;
+      player.matchesPlayed = 0;
+      player.opponents = [];
+      player.gamePoints = 0;
+      player.gameWins = 0;
+      player.gameLosses = 0;
+      player.gameDraws = 0;
+      player.gamesPlayed = 0;
+      player.gameWinPercentage = 0;
+
+      vm.matchData.forEach(function(round) {
+        round.matches.forEach(function(match) {
+          if (match.player1 === player) {
+            if (match.player1Result !== '***Bye***') {
+              if (match.player1GameWins > match.player2GameWins) {
+                player.matchPoints += 3;
+                player.matchWins += 1;
+              } else if (match.player1GameWins === match.player2GameWins) {
+                player.matchPoints += 1;
+                player.matchDraws += 1;
+              } else {
+                player.matchLosses += 1;
+              }
+
+              player.matchesPlayed += 1;
+              player.opponents.push(match.player2);
+              player.gamePoints += match.player1GameWins * 3 + match.draws;
+              player.gameWins += match.player1GameWins;
+              player.gameLosses += match.player2GameWins;
+              player.gameDraws += match.draws;
+              player.gamesPlayed += match.player1GameWins +
+                  match.player2GameWins + match.draws;
+              player.gameWinPercentage = +(player.gamePoints / 3 /
+                  player.gamesPlayed * 100).toFixed(2);
+            } else {
+              // Player had a bye
+              player.matchPoints += 3;
+              player.matchByes += 1;
+              player.gamePoints += 6;
+              player.gameWins += 2;
+              player.gamesPlayed += 2;
+              player.gameWinPercentage = +(player.gamePoints / 3 /
+                  player.gamesPlayed * 100).toFixed(2);
+            }
+          } else if (match.player2 === player) {
+            if (match.player2GameWins > match.player1GameWins) {
+              player.matchPoints += 3;
+              player.matchWins += 1;
+            } else if (match.player2GameWins === match.player1GameWins) {
+              player.matchPoints += 1;
+              player.matchDraws += 1;
+            } else {
+              player.matchLosses += 1;
+            }
+
+            player.matchesPlayed += 1;
+            player.opponents.push(match.player1);
+            player.gamePoints += match.player2GameWins * 3 + match.draws;
+            player.gameWins += match.player2GameWins;
+            player.gameLosses += match.player1GameWins;
+            player.gameDraws += match.draws;
+            player.gamesPlayed += match.player1GameWins +
+                match.player2GameWins + match.draws;
+            player.gameWinPercentage = +(player.gamePoints / 3 /
+                player.gamesPlayed * 100).toFixed(2);
+          }
+        });
+      });
+    }
+
+    /**
+     * Calculate the standings of the players.
+     */
+    function generateStandings() {
+      var rank = 1;
+
+      vm.players.forEach(function(player) {
+        generatePlayerStats(player);
+      });
+
+      vm.players.forEach(function(player) {
+        generateOpponentStats(player);
+      });
+
+      vm.players.sort(playerStandingsCompareFunction);
+
+      vm.players.forEach(function(player) {
+        player.rank = rank++;
+      });
     }
 
     /**
@@ -187,18 +335,40 @@
     }
 
     /**
-     * Filters matches for outstanding checkbox.
+     * Compare function for sorting the standings table.
      *
-     * @param  {Object}  match The match to check for the filter.
-     * @return {Boolean}       True if we should show the match, false
-     *                         otherwise.
+     * @param  {Object} a First player to be compared.
+     * @param  {Object} b Second player to be compared.
+     * @return {number}   Negative if a ranks higher, positive if b ranks
+     *                    higher, 0 if equal.
      */
-    function outstandingFilter(match) {
-      if (vm.showOutstanding && match.complete) {
-        return false;
+    function playerStandingsCompareFunction(a, b) {
+      if (a.matchPoints > b.matchPoints) {
+        return -1;
+      } else if (a.matchPoints < b.matchPoints) {
+        return 1;
       }
 
-      return true;
+      if (a.opponentsMatchWinPercentage > b.opponentsMatchWinPercentage) {
+        return -1;
+      } else if (a.opponentsMatchWinPercentage <
+          b.opponentsMatchWinPercentage) {
+        return 1;
+      }
+
+      if (a.gameWinPercentage > b.gameWinPercentage) {
+        return -1;
+      } else if (a.gameWinPercentage < b.gameWinPercentage) {
+        return 1;
+      }
+
+      if (a.opponentsGameWinPercentage > b.opponentsGameWinPercentage) {
+        return -1;
+      } else if (a.opponentsGameWinPercentage < b.opponentsGameWinPercentage) {
+        return 1;
+      }
+
+      return 0;
     }
 
     /**
@@ -206,6 +376,11 @@
      */
     function redoMatches() {
       vm.currentRound.matches = [];
+      vm.currentRound.complete = false;
+
+      if (vm.currentRound.round === 1) {
+        vm.showStandingsPill = false;
+      }
     }
 
     /**
@@ -219,6 +394,39 @@
       if (player === vm.activePlayer) {
         clearActivePlayer();
       }
+    }
+
+    /**
+     * Filter for viewing pairings.
+     *
+     * @param  {Object}  match The match to check for filtering.
+     * @return {Boolean}       True if the match should be shown, false
+     *                         otherwise.
+     */
+    function roundsFilter(match) {
+      if (vm.showOutstanding && match.complete) {
+        return false;
+      }
+
+      var trimmedQuery = vm.searchQuery.trim();
+
+      if (trimmedQuery) {
+        trimmedQuery = trimmedQuery.toLowerCase();
+
+        if (match.player1.name.toLowerCase().indexOf(trimmedQuery) !== -1) {
+          return true;
+        }
+        if (match.player2.name.toLowerCase().indexOf(trimmedQuery) !== -1) {
+          return true;
+        }
+        if ('' + match.table === trimmedQuery) {
+          return true;
+        }
+
+        return false;
+      }
+
+      return true;
     }
 
     /**
@@ -268,6 +476,28 @@
     }
 
     /**
+     * Filter for the standings table.
+     *
+     * @param  {Object}  player The player to check for the filter.
+     * @return {Boolean}        True if player should be shown, false otherwise.
+     */
+    function standingsSearchFilter(player) {
+      var trimmedSearch = vm.standingsSearch.trim();
+
+      if (trimmedSearch) {
+        trimmedSearch = trimmedSearch.toLowerCase();
+
+        if (player.name.toLowerCase().indexOf(trimmedSearch) !== -1) {
+          return true;
+        }
+
+        return false;
+      }
+
+      return true;
+    }
+
+    /**
      * Submit the match results for the active match, from player 1's
      * perspective.
      *
@@ -288,6 +518,17 @@
       vm.activeMatch.complete = true;
 
       clearActiveMatch();
+
+      var outstandingMatches = vm.currentRound.matches.filter(function(match) {
+        return match.complete === false;
+      });
+
+      if (outstandingMatches.length === 0) {
+        vm.currentRound.complete = true;
+        vm.showStandingsPill = true;
+        generateStandings();
+        $state.go('swiss.standings');
+      }
     }
   }
 })();

@@ -6,7 +6,7 @@
     </div>
     <button type="button"
         class="btn btn-default"
-        ng-disabled="!swiss.activePlayer.name"
+        ng-disabled="!swiss.activePlayer.name || swiss.currentRound"
         ng-click="swiss.savePlayer()">{{swiss.addButtonText}}</button>
   </div>
 
@@ -35,7 +35,7 @@
         <div class="col-sm-4 col-sm-offset-4">
           <button class="btn btn-default"
               type="button"
-              ng-disabled="swiss.players.length < 4"
+              ng-disabled="swiss.players.length < 4 || swiss.currentRound"
               ng-click="swiss.begin()">
             Begin
           </button>

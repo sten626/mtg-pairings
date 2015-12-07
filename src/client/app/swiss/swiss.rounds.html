@@ -47,7 +47,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="match in swiss.currentRound.matches | filter: swiss.outstandingFilter | filter: swiss.searchQuery"
+        <tr ng-repeat="match in swiss.currentRound.matches | filter: swiss.roundsFilter"
             ng-class="{active: match === swiss.activeMatch}"
             ng-click="swiss.setActiveMatch(match)">
           <td>{{match.table}}</td>
@@ -99,7 +99,6 @@
         <button type="button" class="btn btn-default" ng-click="swiss.submitMatchResult(2, 1)">2<br><br>1</button>
         <button type="button" class="btn btn-default" ng-click="swiss.submitMatchResult(1, 1)">1<br><br>1</button>
         <button type="button" class="btn btn-default" ng-click="swiss.submitMatchResult(1, 0)">1<br><br>0</button>
-        <button type="button" class="btn btn-default" ng-click="swiss.submitMatchResult(0, 0)">0<br><br>0</button>
         <button type="button" class="btn btn-default" ng-click="swiss.submitMatchResult(0, 1)">0<br><br>1</button>
         <button type="button" class="btn btn-default" ng-click="swiss.submitMatchResult(1, 2)">1<br><br>2</button>
         <button type="button" class="btn btn-default" ng-click="swiss.submitMatchResult(0, 2)">0<br><br>2</button>

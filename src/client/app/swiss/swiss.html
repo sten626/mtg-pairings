@@ -10,6 +10,9 @@
             ng-show="swiss.currentRound">
           <a ui-sref="swiss.rounds">Rounds</a>
         </li>
+        <li role="presentation" ui-sref-active-eq="active" ng-show="swiss.showStandingsPill">
+          <a ui-sref="swiss.standings">Standings</a>
+        </li>
       </ul>
     </div>
     <div ui-view></div>
