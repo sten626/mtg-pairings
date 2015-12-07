@@ -36,6 +36,7 @@
     vm.searchQuery = '';
     vm.setActiveMatch = setActiveMatch;
     vm.showOutstanding = true;
+    vm.showStandingsPill = false;
     vm.standingsSearch = '';
     vm.standingsSearchFilter = standingsSearchFilter;
     vm.submitMatchResult = submitMatchResult;
@@ -72,6 +73,11 @@
       vm.activeMatch.player2Result = 'Awaiting Result';
       vm.activeMatch.draws = 0;
       vm.activeMatch.complete = false;
+      vm.currentRound.complete = false;
+
+      if (vm.currentRound.round === 1) {
+        vm.showStandingsPill = false;
+      }
     }
 
     /**
@@ -142,6 +148,12 @@
         match.draws = 0;
         match.complete = false;
       });
+
+      vm.currentRound.complete = false;
+
+      if (vm.currentRound.round === 1) {
+        vm.showStandingsPill = false;
+      }
     }
 
     /**
@@ -173,7 +185,7 @@
           opponentsMatchWinPercentageSum += Math.max(
             matchPoints / potentialMatchPoints,
             1 / 3);
-          opponentsGameWinPercentageSum += (gamePoints / potentialGamePoints);
+          opponentsGameWinPercentageSum += gamePoints / potentialGamePoints;
         });
 
         player.opponentsMatchWinPercentage = +(opponentsMatchWinPercentageSum /
@@ -194,57 +206,19 @@
      * @param  {Object} player The player to get stats for.
      */
     function generatePlayerStats(player) {
-      if (!player.matchPoints) {
-        player.matchPoints = 0;
-      }
-
-      if (!player.matchWins) {
-        player.matchWins = 0;
-      }
-
-      if (!player.matchLosses) {
-        player.matchLosses = 0;
-      }
-
-      if (!player.matchDraws) {
-        player.matchDraws = 0;
-      }
-
-      if (!player.matchByes) {
-        player.matchByes = 0;
-      }
-
-      if (!player.matchesPlayed) {
-        player.matchesPlayed = 0;
-      }
-
-      if (!player.opponents) {
-        player.opponents = [];
-      }
-
-      if (!player.gamePoints) {
-        player.gamePoints = 0;
-      }
-
-      if (!player.gameWins) {
-        player.gameWins = 0;
-      }
-
-      if (!player.gameLosses) {
-        player.gameLosses = 0;
-      }
-
-      if (!player.gameDraws) {
-        player.gameDraws = 0;
-      }
-
-      if (!player.gamesPlayed) {
-        player.gamesPlayed = 0;
-      }
-
-      if (!player.gameWinPercentage) {
-        player.gameWinPercentage = 0;
-      }
+      player.matchPoints = 0;
+      player.matchWins = 0;
+      player.matchLosses = 0;
+      player.matchDraws = 0;
+      player.matchByes = 0;
+      player.matchesPlayed = 0;
+      player.opponents = [];
+      player.gamePoints = 0;
+      player.gameWins = 0;
+      player.gameLosses = 0;
+      player.gameDraws = 0;
+      player.gamesPlayed = 0;
+      player.gameWinPercentage = 0;
 
       vm.matchData.forEach(function(round) {
         round.matches.forEach(function(match) {
@@ -306,6 +280,9 @@
       });
     }
 
+    /**
+     * Calculate the standings of the players.
+     */
     function generateStandings() {
       var rank = 1;
 
@@ -357,6 +334,14 @@
       return false;
     }
 
+    /**
+     * Compare function for sorting the standings table.
+     *
+     * @param  {Object} a First player to be compared.
+     * @param  {Object} b Second player to be compared.
+     * @return {number}   Negative if a ranks higher, positive if b ranks
+     *                    higher, 0 if equal.
+     */
     function playerStandingsCompareFunction(a, b) {
       if (a.matchPoints > b.matchPoints) {
         return -1;
@@ -391,6 +376,11 @@
      */
     function redoMatches() {
       vm.currentRound.matches = [];
+      vm.currentRound.complete = false;
+
+      if (vm.currentRound.round === 1) {
+        vm.showStandingsPill = false;
+      }
     }
 
     /**
@@ -406,6 +396,13 @@
       }
     }
 
+    /**
+     * Filter for viewing pairings.
+     *
+     * @param  {Object}  match The match to check for filtering.
+     * @return {Boolean}       True if the match should be shown, false
+     *                         otherwise.
+     */
     function roundsFilter(match) {
       if (vm.showOutstanding && match.complete) {
         return false;
@@ -478,6 +475,12 @@
       return playersCopy;
     }
 
+    /**
+     * Filter for the standings table.
+     *
+     * @param  {Object}  player The player to check for the filter.
+     * @return {Boolean}        True if player should be shown, false otherwise.
+     */
     function standingsSearchFilter(player) {
       var trimmedSearch = vm.standingsSearch.trim();
 
@@ -521,6 +524,8 @@
       });
 
       if (outstandingMatches.length === 0) {
+        vm.currentRound.complete = true;
+        vm.showStandingsPill = true;
         generateStandings();
         $state.go('swiss.standings');
       }
