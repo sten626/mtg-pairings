@@ -47,7 +47,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="match in swiss.currentRound.matches | filter: swiss.outstandingFilter | filter: swiss.searchQuery"
+        <tr ng-repeat="match in swiss.currentRound.matches | filter: swiss.roundsFilter"
             ng-class="{active: match === swiss.activeMatch}"
             ng-click="swiss.setActiveMatch(match)">
           <td>{{match.table}}</td>

@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="col-xs-12">
+    <div class="form-horizontal">
+      <div class="form-group">
+        <label for="standings-search" class="col-sm-1 control-label">Search</label>
+        <div class="col-sm-3">
+          <input type="search" class="form-control" id="standings-search"
+              placeholder="Player Name" ng-model="swiss.standingsSearch">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>Match Points</th>
+          <th>Matches Play/Win/Draw/Bye</th>
+          <th>Opponents Match Win Percentage</th>
+          <th>Game Win Percentage</th>
+          <th>Opponents Game Win Percentage</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="player in swiss.players | filter: swiss.standingsSearchFilter">
+          <td>{{player.rank}}</td>
+          <td>{{player.name}}</td>
+          <td>{{player.matchPoints}}</td>
+          <td>{{player.matchesPlayed}}/{{player.matchWins}}/{{player.matchDraws}}/{{player.matchByes}}</td>
+          <td>{{player.opponentsMatchWinPercentage}}</td>
+          <td>{{player.gameWinPercentage}}</td>
+          <td>{{player.opponentsGameWinPercentage}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

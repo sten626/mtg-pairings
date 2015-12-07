@@ -28,6 +28,10 @@
       .state('swiss.rounds', {
         url: '/rounds',
         templateUrl: 'app/swiss/swiss.rounds.html'
+      })
+      .state('swiss.standings', {
+        url:'/standings',
+        templateUrl: 'app/swiss/swiss.standings.html'
       });
   }
 })();
