@@ -5,7 +5,7 @@
       <input id="active-player-name" class="form-control" type="text" placeholder="Name" ng-model="swiss.activePlayer.name">
     </div>
     <button type="button"
-        class="btn btn-default"
+        class="btn btn-default save-player-button"
         ng-disabled="!swiss.activePlayer.name || swiss.currentRound"
         ng-click="swiss.savePlayer()">{{swiss.addButtonText}}</button>
   </div>
@@ -22,7 +22,7 @@
         </button>
       </a>
     </div>
-    
+
     <div class="form-horizontal" ng-show="swiss.players.length > 0">
       <div class="form-group">
         <label for="number-of-rounds" class="col-sm-4 control-label">Number of Rounds</label>
