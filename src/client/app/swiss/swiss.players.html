@@ -17,7 +17,7 @@
           ng-class="{active: swiss.activePlayer === player}"
           ng-click="swiss.editPlayer(player)">
         {{player.name}}
-        <button class="close" type="button" aria-label="close" ng-click="swiss.removePlayer(player)">
+        <button class="close" type="button" aria-label="close" ng-click="vm.removePlayer(player)">
           <span aria-hidden="true">&times;</span>
         </button>
       </a>

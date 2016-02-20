@@ -8,7 +8,8 @@
   function playerService() {
     var service = {
       createPlayer: createPlayer,
-      getPlayers: getPlayers
+      getPlayers: getPlayers,
+      removePlayer: removePlayer
     };
     var nextId = 1;
     var players = [];
@@ -30,15 +31,32 @@
     }
 
     function getPlayers() {
+      var i;
+      var maxId;
+
       players = angular.fromJson(localStorage.getItem('players'));
 
       if (!players) {
         players = [];
+        nextId = 1;
+      } else {
+        for (i = 0; i < players.length; i++) {
+          if (!maxId || players[i].id > maxId) {
+            maxId = players[i].id;
+          }
+        }
+
+        nextId = maxId + 1;
       }
 
-      nextId = players.length + 1;
-
       return players;
+    }
+
+    function removePlayer(player) {
+      var index = players.indexOf(player);
+      players.splice(index, 1);
+
+      localStorage.setItem('players', angular.toJson(players));
     }
   }
 })();

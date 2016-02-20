@@ -13,6 +13,7 @@
     vm.addPlayer = addPlayer;
     vm.newPlayerName = '';
     vm.players = [];
+    vm.removePlayer = removePlayer;
 
     activate();
 
@@ -27,6 +28,10 @@
         playerService.createPlayer(vm.newPlayerName);
         vm.newPlayerName = '';
       }
+    }
+
+    function removePlayer(player) {
+      playerService.removePlayer(player);
     }
   }
 })();
