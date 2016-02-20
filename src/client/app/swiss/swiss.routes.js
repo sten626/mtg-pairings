@@ -17,13 +17,15 @@
       .state('swiss', {
         url: '/swiss',
         abstract: true,
-        templateUrl: 'app/swiss/swiss.html',
-        controller: 'SwissController',
-        controllerAs: 'swiss'
+        templateUrl: 'app/swiss/swiss.html'
+        //controller: 'SwissController',
+        //controllerAs: 'swiss'
       })
       .state('swiss.players', {
         url: '',
-        templateUrl: 'app/swiss/swiss.players.html'
+        templateUrl: 'app/swiss/swiss.players.html',
+        controller: 'PlayersController',
+        controllerAs: 'vm'
       })
       .state('swiss.rounds', {
         url: '/rounds',

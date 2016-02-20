@@ -2,18 +2,18 @@
   <div class="col-sm-6">
     <div class="form-group">
       <label for="active-player-name" class="sr-only">New player name</label>
-      <input id="active-player-name" class="form-control" type="text" placeholder="Name" ng-model="swiss.activePlayer.name">
+      <input id="active-player-name" class="form-control" type="text" placeholder="Name" ng-model="vm.newPlayerName">
     </div>
     <button type="button"
         class="btn btn-default save-player-button"
-        ng-disabled="!swiss.activePlayer.name || swiss.currentRound"
-        ng-click="swiss.savePlayer()">{{swiss.addButtonText}}</button>
+        ng-disabled="!vm.newPlayerName"
+        ng-click="vm.addPlayer()">Add Player</button>
   </div>
 
   <div class="col-sm-6">
-    <div class="list-group" ng-show="swiss.players.length > 0">
+    <div class="list-group" ng-show="vm.players.length > 0">
       <a class="list-group-item"
-          ng-repeat="player in swiss.players"
+          ng-repeat="player in vm.players track by player.id"
           ng-class="{active: swiss.activePlayer === player}"
           ng-click="swiss.editPlayer(player)">
         {{player.name}}
