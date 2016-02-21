@@ -1,21 +1,21 @@
 <div class="row">
   <div class="col-sm-6">
     <div class="form-group">
-      <label for="active-player-name" class="sr-only">New player name</label>
-      <input id="active-player-name" class="form-control" type="text" placeholder="Name" ng-model="vm.newPlayerName">
+      <label for="active-player-name" class="sr-only">Player name</label>
+      <input id="active-player-name" class="form-control" type="text" placeholder="Name" ng-model="vm.playerName">
     </div>
     <button type="button"
         class="btn btn-default save-player-button"
-        ng-disabled="!vm.newPlayerName"
-        ng-click="vm.addPlayer()">Add Player</button>
+        ng-disabled="!vm.playerName"
+        ng-click="(vm.editingPlayer ? vm.savePlayer() : vm.addPlayer())">{{(vm.editingPlayer ? 'Save Player' : 'Add Player')}}</button>
   </div>
 
   <div class="col-sm-6">
     <div class="list-group" ng-show="vm.players.length > 0">
       <a class="list-group-item"
           ng-repeat="player in vm.players track by player.id"
-          ng-class="{active: swiss.activePlayer === player}"
-          ng-click="swiss.editPlayer(player)">
+          ng-class="{active: vm.editingPlayer === player}"
+          ng-click="vm.editPlayer(player)">
         {{player.name}}
         <button class="close" type="button" aria-label="close" ng-click="vm.removePlayer(player)">
           <span aria-hidden="true">&times;</span>

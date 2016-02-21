@@ -11,9 +11,12 @@
     var vm = this;
 
     vm.addPlayer = addPlayer;
-    vm.newPlayerName = '';
+    vm.editingPlayer = null;
+    vm.editPlayer = editPlayer;
+    vm.playerName = '';
     vm.players = [];
     vm.removePlayer = removePlayer;
+    vm.savePlayer = savePlayer;
 
     activate();
 
@@ -24,14 +27,26 @@
     }
 
     function addPlayer() {
-      if (vm.newPlayerName !== '') {
-        playerService.createPlayer(vm.newPlayerName);
-        vm.newPlayerName = '';
+      if (vm.playerName !== '') {
+        playerService.createPlayer(vm.playerName);
+        vm.playerName = '';
       }
+    }
+
+    function editPlayer(player) {
+      vm.editingPlayer = player;
+      vm.playerName = player.name;
     }
 
     function removePlayer(player) {
       playerService.removePlayer(player);
+    }
+
+    function savePlayer() {
+      vm.editingPlayer.name = vm.playerName;
+      playerService.savePlayers();
+      vm.editingPlayer = null;
+      vm.playerName = '';
     }
   }
 })();

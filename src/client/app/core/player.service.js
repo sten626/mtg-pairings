@@ -9,7 +9,8 @@
     var service = {
       createPlayer: createPlayer,
       getPlayers: getPlayers,
-      removePlayer: removePlayer
+      removePlayer: removePlayer,
+      savePlayers: savePlayers
     };
     var nextId = 1;
     var players = [];
@@ -56,6 +57,10 @@
       var index = players.indexOf(player);
       players.splice(index, 1);
 
+      localStorage.setItem('players', angular.toJson(players));
+    }
+
+    function savePlayers() {
       localStorage.setItem('players', angular.toJson(players));
     }
   }
