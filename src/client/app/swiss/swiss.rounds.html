@@ -3,7 +3,7 @@
     <div class="form-inline">
       <div class="form-group">
         <label for="roundNumber">Round</label>
-        <select id="roundNumber" class="form-control" ng-model="swiss.currentRound" ng-options="round.round for round in swiss.matchData"></select>
+        <select id="roundNumber" class="form-control" ng-model="vm.selectedRound" ng-options="round.id for round in vm.rounds track by round.id"></select>
       </div>
 
       <button class="btn btn-default" ng-hide="swiss.currentRound.matches.length > 0" ng-click="swiss.createMatches()">Create Matches</button>
@@ -134,7 +134,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="form-group">
             <div class="col-xs-12">
               <div class="checkbox">

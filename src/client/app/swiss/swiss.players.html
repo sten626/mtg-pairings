@@ -23,11 +23,11 @@
       </a>
     </div>
 
-    <div class="form-horizontal" ng-show="swiss.players.length > 0">
+    <div class="form-horizontal" ng-show="vm.players.length > 0">
       <div class="form-group">
         <label for="number-of-rounds" class="col-sm-4 control-label">Number of Rounds</label>
         <div class="col-sm-2">
-          <input type="number" class="form-control" id="number-of-rounds" min="3" ng-value="swiss.numberOfRounds">
+          <input type="number" class="form-control" id="number-of-rounds" min="3" ng-value="vm.numberOfRounds">
         </div>
       </div>
 
@@ -35,8 +35,8 @@
         <div class="col-sm-4 col-sm-offset-4">
           <button class="btn btn-default"
               type="button"
-              ng-disabled="swiss.players.length < 4 || swiss.currentRound"
-              ng-click="swiss.begin()">
+              ng-disabled="vm.players.length < 4"
+              ng-click="vm.startRounds()">
             Begin
           </button>
         </div>

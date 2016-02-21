@@ -29,7 +29,9 @@
       })
       .state('swiss.rounds', {
         url: '/rounds',
-        templateUrl: 'app/swiss/swiss.rounds.html'
+        templateUrl: 'app/swiss/swiss.rounds.html',
+        controller: 'RoundsController',
+        controllerAs: 'vm'
       })
       .state('swiss.standings', {
         url:'/standings',

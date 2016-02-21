@@ -9,8 +9,10 @@
     var service = {
       createPlayer: createPlayer,
       getPlayers: getPlayers,
+      recommendedNumberOfRounds: recommendedNumberOfRounds,
       removePlayer: removePlayer,
-      savePlayers: savePlayers
+      savePlayers: savePlayers,
+      shuffledPlayers: shuffledPlayers
     };
     var nextId = 1;
     var players = [];
@@ -53,6 +55,10 @@
       return players;
     }
 
+    function recommendedNumberOfRounds() {
+      return Math.max(Math.ceil(Math.log2(players.length)), 3);
+    }
+
     function removePlayer(player) {
       var index = players.indexOf(player);
       players.splice(index, 1);
@@ -62,6 +68,28 @@
 
     function savePlayers() {
       localStorage.setItem('players', angular.toJson(players));
+    }
+
+    /**
+     * Shuffles the players array and returns a shallow copy.
+     *
+     * @return {Array} A shuffled shallow copy of the players array.
+     */
+    function shuffledPlayers() {
+      var currentIndex = players.length;
+      var playersCopy = players.slice();
+      var randomIndex;
+      var tempValue;
+
+      while (currentIndex !== 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        tempValue = playersCopy[currentIndex];
+        playersCopy[currentIndex] = playersCopy[randomIndex];
+        playersCopy[randomIndex] = tempValue;
+      }
+
+      return playersCopy;
     }
   }
 })();
