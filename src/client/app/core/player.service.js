@@ -3,11 +3,13 @@
 
   angular
     .module('mtgPairings.core')
-    .factory('playerService', playerService);
+    .factory('Player', PlayerService);
 
-  function playerService() {
+  function PlayerService() {
+    /*
     var service = {
       createPlayer: createPlayer,
+      getPlayer: getPlayer,
       getPlayers: getPlayers,
       recommendedNumberOfRounds: recommendedNumberOfRounds,
       removePlayer: removePlayer,
@@ -16,41 +18,60 @@
     };
     var nextId = 1;
     var players = [];
+    */
+    function Player(playerData) {
+      if (playerData) {
+        angular.extend(this, {
+          id: nextId(),
+          name: ''
+        });
+        angular.extend(this, playerData);
+        players.push(this);
+      }
+    }
 
-    return service;
+    var players = [];
+
+    angular.extend(Player, {
+      query: query,
+      recommendedNumberOfRounds: recommendedNumberOfRounds
+    });
+
+    angular.extend(Player.prototype, {
+      remove: remove,
+      save: save
+    });
+
+    return Player;
 
     //////////
 
-    function createPlayer(name) {
-      var newPlayer = {
-        id: nextId++,
-        name: name
-      };
+    function nextId() {
+      if (!nextId.id) {
+        nextId.id = 1;
+      }
 
-      players.push(newPlayer);
-      localStorage.setItem('players', angular.toJson(players));
-
-      return newPlayer;
+      return nextId.id++;
     }
 
-    function getPlayers() {
+    function query() {
       var i;
-      var maxId;
+      var maxId = 0;
+      var player;
+      var playersString = localStorage.getItem('players');
+      var playersData = playersString ? angular.fromJson(playersString) : [];
 
-      players = angular.fromJson(localStorage.getItem('players'));
+      players = [];
 
-      if (!players) {
-        players = [];
-        nextId = 1;
-      } else {
-        for (i = 0; i < players.length; i++) {
-          if (!maxId || players[i].id > maxId) {
-            maxId = players[i].id;
-          }
+      for (i = 0; i < playersData.length; i++) {
+        if (playersData[i].id > maxId) {
+          maxId = playersData[i].id;
         }
 
-        nextId = maxId + 1;
+        player = new Player(playersData[i]);
       }
+
+      nextId.id = maxId + 1;
 
       return players;
     }
@@ -59,14 +80,12 @@
       return Math.max(Math.ceil(Math.log2(players.length)), 3);
     }
 
-    function removePlayer(player) {
-      var index = players.indexOf(player);
-      players.splice(index, 1);
-
+    function remove() {
+      players.splice(players.indexOf(this), 1);
       localStorage.setItem('players', angular.toJson(players));
     }
 
-    function savePlayers() {
+    function save() {
       localStorage.setItem('players', angular.toJson(players));
     }
 

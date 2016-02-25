@@ -10,6 +10,7 @@
   function roundsService(playerService) {
     var service = {
       generatePairings: generatePairings,
+      getRounds: getRounds,
       startRound: startRound
     };
     var nextId = 1;
@@ -22,10 +23,7 @@
     function generatePairings(roundNum) {
       var player1;
       var player2;
-      var round = {
-        id: roundNum,
-        pairings: []
-      };
+      var round = rounds[roundNum - 1];
       var shuffledPlayers;
       var table = 1;
 
@@ -55,9 +53,13 @@
           });
         }
 
-        pairings.push(round);
-        localStorage.setItem('pairings', angular.toJson(pairings));
+        localStorage.setItem('rounds', angular.toJson(rounds));
       }
+    }
+
+    function getRounds() {
+      rounds = angular.fromJson(localStorage.getItem('rounds'));
+      return rounds;
     }
 
     function startRound(roundNum) {

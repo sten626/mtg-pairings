@@ -5,9 +5,9 @@
     .module('mtgPairings.swiss')
     .controller('PlayersController', PlayersController);
 
-  PlayersController.$inject = ['$state', 'playerService'];
+  PlayersController.$inject = ['$state', 'Player'];
 
-  function PlayersController($state, playerService) {
+  function PlayersController($state, Player) {
     var vm = this;
 
     vm.addPlayer = addPlayer;
@@ -25,15 +25,18 @@
     //////////
 
     function activate() {
-      vm.players = playerService.getPlayers();
-      vm.numberOfRounds = playerService.recommendedNumberOfRounds();
+      vm.players = Player.query();
+      vm.numberOfRounds = Player.recommendedNumberOfRounds();
     }
 
     function addPlayer() {
       if (vm.playerName !== '') {
-        playerService.createPlayer(vm.playerName);
+        var player = new Player({
+          name: vm.playerName
+        });
+        player.save();
         vm.playerName = '';
-        vm.numberOfRounds = playerService.recommendedNumberOfRounds();
+        vm.numberOfRounds = Player.recommendedNumberOfRounds();
       }
     }
 
@@ -43,13 +46,13 @@
     }
 
     function removePlayer(player) {
-      playerService.removePlayer(player);
-      vm.numberOfRounds = playerService.recommendedNumberOfRounds();
+      player.remove();
+      vm.numberOfRounds = Player.recommendedNumberOfRounds();
     }
 
     function savePlayer() {
       vm.editingPlayer.name = vm.playerName;
-      playerService.savePlayers();
+      vm.editingPlayer.save();
       vm.editingPlayer = null;
       vm.playerName = '';
     }

@@ -6,13 +6,13 @@
         <select id="roundNumber" class="form-control" ng-model="vm.selectedRound" ng-options="round.id for round in vm.rounds track by round.id"></select>
       </div>
 
-      <button class="btn btn-default" ng-hide="swiss.currentRound.matches.length > 0" ng-click="swiss.createMatches()">Create Matches</button>
+      <button class="btn btn-default" ng-hide="vm.selectedRound.pairings.length > 0" ng-click="vm.createPairings()">Create Pairings</button>
     </div>
     <hr>
   </div>
 </div>
 
-<div class="row swiss-search-row" ng-show="swiss.currentRound.matches.length > 0">
+<div class="row swiss-search-row" ng-show="vm.selectedRound.pairings.length > 0">
   <div class="col-xs-12">
     <div class="form-inline">
       <div class="form-group">
@@ -23,7 +23,7 @@
   </div>
 </div>
 
-<div class="row swiss-match-options-row" ng-show="swiss.currentRound.matches.length > 0">
+<div class="row swiss-match-options-row" ng-show="vm.selectedRound.pairings.length > 0">
   <div class="col-sm-6">
     <div class="form-inline">
       <div class="checkbox">
@@ -42,7 +42,7 @@
   </div>
 </div>
 
-<div class="row" ng-show="swiss.currentRound.matches.length > 0">
+<div class="row" ng-show="vm.selectedRound.pairings.length > 0">
   <div class="col-xs-12">
     <table class="table table-hover">
       <thead>
@@ -55,13 +55,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="match in swiss.currentRound.matches | filter: swiss.roundsFilter"
+        <tr ng-repeat="pairing in vm.selectedRound.pairings track by pairing.id"
             ng-class="{active: match === swiss.activeMatch}"
             ng-click="swiss.setActiveMatch(match)">
-          <td>{{match.table}}</td>
-          <td>{{match.player1.name}}</td>
+          <td>{{pairing.id}}</td>
+          <td>{{vm.getPlayerName(pairing.player1Id)}}</td>
           <td>{{match.player1Result}}</td>
-          <td>{{match.player2.name}}</td>
+          <td>{{vm.getPlayerName(pairing.player2Id)}}</td>
           <td>{{match.player2Result}}</td>
         </tr>
       </tbody>
