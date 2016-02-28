@@ -5,9 +5,9 @@
     .module('mtgPairings.swiss')
     .controller('RoundsController', RoundsController);
 
-  RoundsController.$inject = ['playerService', 'roundsService'];
+  RoundsController.$inject = ['Round'];
 
-  function RoundsController(playerService, roundsService) {
+  function RoundsController(Round) {
     var vm = this;
     vm.createPairings = createPairings;
     vm.getPlayerName = getPlayerName;
@@ -19,17 +19,18 @@
     //////////
 
     function activate() {
-      vm.rounds = roundsService.getRounds();
+      vm.rounds = Round.query();
 
       if (vm.rounds.length === 0) {
-        vm.rounds = roundsService.startRound(1);
+        var round = new Round();
+        round.save();
       }
 
       vm.selectedRound = vm.rounds[0];
     }
 
     function createPairings() {
-      roundsService.generatePairings(vm.selectedRound.id);
+      vm.selectedRound.generatePairings();
     }
 
     function getPlayerName(id) {

@@ -6,41 +6,30 @@
     .factory('Player', PlayerService);
 
   function PlayerService() {
-    /*
-    var service = {
-      createPlayer: createPlayer,
-      getPlayer: getPlayer,
-      getPlayers: getPlayers,
-      recommendedNumberOfRounds: recommendedNumberOfRounds,
-      removePlayer: removePlayer,
-      savePlayers: savePlayers,
-      shuffledPlayers: shuffledPlayers
-    };
-    var nextId = 1;
     var players = [];
-    */
+
     function Player(playerData) {
       if (playerData) {
         angular.extend(this, {
           id: nextId(),
           name: ''
         });
+
         angular.extend(this, playerData);
         players.push(this);
       }
     }
 
-    var players = [];
-
     angular.extend(Player, {
       query: query,
-      recommendedNumberOfRounds: recommendedNumberOfRounds
+      recommendedNumberOfRounds: recommendedNumberOfRounds,
+      shuffle: shuffle
     });
 
-    angular.extend(Player.prototype, {
+    Player.prototype = {
       remove: remove,
       save: save
-    });
+    };
 
     return Player;
 
@@ -57,7 +46,6 @@
     function query() {
       var i;
       var maxId = 0;
-      var player;
       var playersString = localStorage.getItem('players');
       var playersData = playersString ? angular.fromJson(playersString) : [];
 
@@ -68,7 +56,7 @@
           maxId = playersData[i].id;
         }
 
-        player = new Player(playersData[i]);
+        new Player(playersData[i]);
       }
 
       nextId.id = maxId + 1;
@@ -94,7 +82,8 @@
      *
      * @return {Array} A shuffled shallow copy of the players array.
      */
-    function shuffledPlayers() {
+    function shuffle() {
+      Player.query();
       var currentIndex = players.length;
       var playersCopy = players.slice();
       var randomIndex;
