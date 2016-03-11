@@ -17,7 +17,7 @@
     <div class="form-inline">
       <div class="form-group">
         <label for="search">Search</label>
-        <input type="search" class="form-control" id="search" placeholder="Player or Table" ng-model="swiss.searchQuery">
+        <input type="search" class="form-control" id="search" placeholder="Player or Table" ng-model="vm.searchQuery">
       </div>
     </div>
   </div>
@@ -28,7 +28,7 @@
     <div class="form-inline">
       <div class="checkbox">
         <label>
-          <input type="checkbox" ng-model="swiss.showOutstanding"> Outstanding Results
+          <input type="checkbox" ng-model="vm.showOutstanding"> Outstanding Results
         </label>
       </div>
     </div>
@@ -36,7 +36,7 @@
 
   <div class="col-sm-6">
     <div class="form-inline">
-      <button type="button" class="btn btn-default" ng-click="swiss.deleteResults()">Delete Results</button>
+      <button type="button" class="btn btn-default" ng-click="vm.deleteResults()">Delete Results</button>
       <button type="button" class="btn btn-default" ng-click="swiss.redoMatches()">Redo Matches</button>
     </div>
   </div>
@@ -55,31 +55,31 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="pairing in vm.selectedRound.pairings track by pairing.id"
-            ng-class="{active: match === swiss.activeMatch}"
-            ng-click="swiss.setActiveMatch(match)">
+        <tr ng-repeat="pairing in vm.selectedRound.pairings | filter: vm.pairingsFilter"
+            ng-class="{active: pairing === vm.selectedPairing}"
+            ng-click="vm.setSelectedPairing(pairing)">
           <td>{{pairing.id}}</td>
           <td>{{vm.getPlayerName(pairing.player1Id)}}</td>
-          <td>{{match.player1Result}}</td>
+          <td>{{vm.player1ResultDisplay(pairing)}}</td>
           <td>{{vm.getPlayerName(pairing.player2Id)}}</td>
-          <td>{{match.player2Result}}</td>
+          <td>{{vm.player2ResultDisplay(pairing)}}</td>
         </tr>
       </tbody>
     </table>
   </div>
 </div>
-<div class="row" ng-show="swiss.activeMatch">
+<div class="row" ng-show="vm.selectedPairing">
   <div class="col-xs-12">
     <div class="row">
       <div class="col-xs-9 col-sm-6">
         <div class="form-horizontal">
           <div class="form-group">
             <label for="player1Result" class="col-xs-6 col-sm-9 control-label">
-              {{swiss.activeMatch.player1.name}}
+              {{vm.getPlayerName(vm.selectedPairing.player1Id)}}
             </label>
             <div class="col-xs-6 col-sm-3">
               <div class="input-group">
-                <input type="number" class="form-control" id="player1Result" ng-model="swiss.activeMatch.player1GameWins" min=0 max=2>
+                <input type="number" class="form-control" id="player1Result" ng-model="vm.selectedPairing.player1GameWins" min=0 max=2>
                 <span class="input-group-btn">
                   <button class="btn btn-default" type="button">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -91,11 +91,11 @@
 
           <div class="form-group">
             <label for="player2Result" class="col-xs-6 col-sm-9 control-label">
-              {{swiss.activeMatch.player2.name}}
+              {{vm.getPlayerName(vm.selectedPairing.player2Id)}}
             </label>
             <div class="col-xs-6 col-sm-3">
               <div class="input-group">
-                <input type="number" class="form-control" id="player2Result" ng-model="swiss.activeMatch.player2GameWins" min=0 max=2>
+                <input type="number" class="form-control" id="player2Result" ng-model="vm.selectedPairing.player2GameWins" min=0 max=2>
                 <span class="input-group-btn">
                   <button class="btn btn-default" type="button">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -111,7 +111,7 @@
             </label>
             <div class="col-xs-6 col-sm-3">
               <div class="input-group">
-                <input type="number" class="form-control" id="draws" ng-model="swiss.activeMatch.draws" min=0 max=3>
+                <input type="number" class="form-control" id="draws" ng-model="vm.selectedPairing.draws" min=0 max=3>
                 <span class="input-group-btn">
                   <button class="btn btn-default" type="button">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -153,14 +153,14 @@
         <button type="button"
             class="btn btn-default center-block"
             ng-disabled="swiss.isMatchSubmitDisabled()"
-            ng-click="swiss.submitMatchResult(swiss.activeMatch.player1GameWins, swiss.activeMatch.player2GameWins, swiss.activeMatch.draws)">
+            ng-click="vm.submitMatchResults()">
           Enter
         </button>
       </div>
       <div class="col-xs-6">
         <button type="button"
             class="btn btn-default center-block"
-            ng-click="swiss.clearActiveMatchResult()">
+            ng-click="vm.clearSelectedPairingResult()">
           Clear Result
         </button>
       </div>

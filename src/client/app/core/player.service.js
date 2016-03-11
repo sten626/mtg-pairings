@@ -21,6 +21,7 @@
     }
 
     angular.extend(Player, {
+      get: get,
       query: query,
       recommendedNumberOfRounds: recommendedNumberOfRounds,
       shuffle: shuffle
@@ -34,6 +35,34 @@
     return Player;
 
     //////////
+
+    function get(playerData) {
+      var failed;
+      var i;
+      var key;
+
+      query();
+
+      if (playerData) {
+        for (i = 0; i < players.length; i++) {
+          failed = 0;
+
+          for (key in playerData) {
+            if (playerData.hasOwnProperty(key)) {
+              if (playerData[key] !== players[i][key]) {
+                failed += 1;
+              }
+            }
+          }
+
+          if (!failed) {
+            return players[i];
+          }
+        }
+      }
+
+      return null;
+    }
 
     function nextId() {
       if (!nextId.id) {

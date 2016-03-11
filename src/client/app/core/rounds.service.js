@@ -60,7 +60,11 @@
           this.pairings.push({
             id: table++,
             player1Id: player1.id,
-            player2Id: player2.id
+            player2Id: player2.id,
+            player1GameWins: 0,
+            player2GameWins: 0,
+            draws: 0,
+            done: false
           });
 
           player1 = null;
@@ -73,7 +77,11 @@
           this.pairings.push({
             id: table++,
             player1Id: player1.id,
-            player2Id: -1
+            player2Id: -1,
+            player1GameWins: 2,
+            player2GameWins: 0,
+            draws: 0,
+            done: true
           });
         }
 
