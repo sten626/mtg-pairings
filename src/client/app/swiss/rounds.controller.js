@@ -13,6 +13,9 @@
     vm.createPairings = createPairings;
     vm.deleteResults = deleteResults;
     vm.getPlayerName = getPlayerName;
+    vm.incrementDraws = incrementDraws;
+    vm.incrementPlayer1GameWins = incrementPlayer1GameWins;
+    vm.incrementPlayer2GameWins = incrementPlayer2GameWins;
     vm.pairingsFilter = pairingsFilter;
     vm.player1ResultDisplay = player1ResultDisplay;
     vm.player2ResultDisplay = player2ResultDisplay;
@@ -79,6 +82,24 @@
     function getPlayerName(id) {
       var player = Player.get({id: id});
       return player ? player.name : 'BYE';
+    }
+
+    function incrementDraws() {
+      if (vm.selectedPairing && vm.selectedPairing.draws < 3) {
+        vm.selectedPairing.draws++;
+      }
+    }
+
+    function incrementPlayer1GameWins() {
+      if (vm.selectedPairing && vm.selectedPairing.player1GameWins < 2) {
+        vm.selectedPairing.player1GameWins++;
+      }
+    }
+
+    function incrementPlayer2GameWins() {
+      if (vm.selectedPairing && vm.selectedPairing.player2GameWins < 2) {
+        vm.selectedPairing.player2GameWins++;
+      }
     }
 
     function pairingsFilter(pairing) {

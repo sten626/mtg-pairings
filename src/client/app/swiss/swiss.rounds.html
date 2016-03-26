@@ -81,7 +81,7 @@
               <div class="input-group">
                 <input type="number" class="form-control" id="player1Result" ng-model="vm.selectedPairing.player1GameWins" min=0 max=2>
                 <span class="input-group-btn">
-                  <button class="btn btn-default" type="button">
+                  <button class="btn btn-default" type="button" ng-click="vm.incrementPlayer1GameWins()">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                   </button>
                 </span>
@@ -97,7 +97,7 @@
               <div class="input-group">
                 <input type="number" class="form-control" id="player2Result" ng-model="vm.selectedPairing.player2GameWins" min=0 max=2>
                 <span class="input-group-btn">
-                  <button class="btn btn-default" type="button">
+                  <button class="btn btn-default" type="button" ng-click="vm.incrementPlayer2GameWins()">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                   </button>
                 </span>
@@ -113,7 +113,7 @@
               <div class="input-group">
                 <input type="number" class="form-control" id="draws" ng-model="vm.selectedPairing.draws" min=0 max=3>
                 <span class="input-group-btn">
-                  <button class="btn btn-default" type="button">
+                  <button class="btn btn-default" type="button" ng-click="vm.incrementDraws()">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                   </button>
                 </span>
