@@ -16,6 +16,7 @@
     vm.pairingsFilter = pairingsFilter;
     vm.player1ResultDisplay = player1ResultDisplay;
     vm.player2ResultDisplay = player2ResultDisplay;
+    vm.redoPairings = redoPairings;
     vm.rounds = [];
     vm.searchQuery = '';
     vm.selectedPairing;
@@ -128,6 +129,11 @@
       } else {
         return 'Awaiting result';
       }
+    }
+
+    function redoPairings() {
+      vm.selectedRound.pairings.length = 0;
+      vm.selectedRound.save();
     }
 
     function setSelectedPairing(pairing) {
