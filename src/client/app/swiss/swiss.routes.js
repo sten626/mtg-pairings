@@ -17,9 +17,9 @@
       .state('swiss', {
         url: '/swiss',
         abstract: true,
-        templateUrl: 'app/swiss/swiss.html'
-        //controller: 'SwissController',
-        //controllerAs: 'swiss'
+        templateUrl: 'app/swiss/swiss.html',
+        controller: 'SwissController',
+        controllerAs: 'vm'
       })
       .state('swiss.players', {
         url: '',
