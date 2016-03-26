@@ -13,14 +13,21 @@
    * @param {Object} $state ui-router's state object.
    */
   function SwissController(Round) {
+    var rounds;
     var vm = this;
 
     vm.showRoundsPill = showRoundsPill;
 
+    activate();
+
     ////////////
 
+    function activate() {
+      rounds = Round.query();
+    }
+
     function showRoundsPill() {
-      if (Round.query().length > 0) {
+      if (rounds.length > 0) {
         return true;
       }
 

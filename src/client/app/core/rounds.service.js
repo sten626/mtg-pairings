@@ -103,7 +103,7 @@
       var roundsString = localStorage.getItem('rounds');
       var roundsData = roundsString ? angular.fromJson(roundsString) : [];
 
-      rounds = [];
+      rounds.length = 0;
 
       for (i = 0; i < roundsData.length; i++) {
         if (roundsData[i].id > maxId) {
