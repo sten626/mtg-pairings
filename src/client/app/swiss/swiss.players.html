@@ -1,33 +1,33 @@
 <div class="row">
   <div class="col-sm-6">
     <div class="form-group">
-      <label for="active-player-name" class="sr-only">New player name</label>
-      <input id="active-player-name" class="form-control" type="text" placeholder="Name" ng-model="swiss.activePlayer.name">
+      <label for="active-player-name" class="sr-only">Player name</label>
+      <input id="active-player-name" class="form-control" type="text" placeholder="Name" ng-model="vm.playerName">
     </div>
     <button type="button"
         class="btn btn-default save-player-button"
-        ng-disabled="!swiss.activePlayer.name || swiss.currentRound"
-        ng-click="swiss.savePlayer()">{{swiss.addButtonText}}</button>
+        ng-disabled="!vm.playerName"
+        ng-click="(vm.editingPlayer ? vm.savePlayer() : vm.addPlayer())">{{(vm.editingPlayer ? 'Save Player' : 'Add Player')}}</button>
   </div>
 
   <div class="col-sm-6">
-    <div class="list-group" ng-show="swiss.players.length > 0">
+    <div class="list-group" ng-show="vm.players.length > 0">
       <a class="list-group-item"
-          ng-repeat="player in swiss.players"
-          ng-class="{active: swiss.activePlayer === player}"
-          ng-click="swiss.editPlayer(player)">
+          ng-repeat="player in vm.players track by player.id"
+          ng-class="{active: vm.editingPlayer === player}"
+          ng-click="vm.editPlayer(player)">
         {{player.name}}
-        <button class="close" type="button" aria-label="close" ng-click="swiss.removePlayer(player)">
+        <button class="close" type="button" aria-label="close" ng-click="vm.removePlayer(player)">
           <span aria-hidden="true">&times;</span>
         </button>
       </a>
     </div>
 
-    <div class="form-horizontal" ng-show="swiss.players.length > 0">
+    <div class="form-horizontal" ng-show="vm.players.length > 0">
       <div class="form-group">
         <label for="number-of-rounds" class="col-sm-4 control-label">Number of Rounds</label>
         <div class="col-sm-2">
-          <input type="number" class="form-control" id="number-of-rounds" min="3" ng-value="swiss.numberOfRounds">
+          <input type="number" class="form-control" id="number-of-rounds" min="3" ng-value="vm.numberOfRounds">
         </div>
       </div>
 
@@ -35,8 +35,8 @@
         <div class="col-sm-4 col-sm-offset-4">
           <button class="btn btn-default"
               type="button"
-              ng-disabled="swiss.players.length < 4 || swiss.currentRound"
-              ng-click="swiss.begin()">
+              ng-disabled="vm.players.length < 4"
+              ng-click="vm.startRounds()">
             Begin
           </button>
         </div>

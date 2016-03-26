@@ -19,15 +19,19 @@
         abstract: true,
         templateUrl: 'app/swiss/swiss.html',
         controller: 'SwissController',
-        controllerAs: 'swiss'
+        controllerAs: 'vm'
       })
       .state('swiss.players', {
         url: '',
-        templateUrl: 'app/swiss/swiss.players.html'
+        templateUrl: 'app/swiss/swiss.players.html',
+        controller: 'PlayersController',
+        controllerAs: 'vm'
       })
       .state('swiss.rounds', {
         url: '/rounds',
-        templateUrl: 'app/swiss/swiss.rounds.html'
+        templateUrl: 'app/swiss/swiss.rounds.html',
+        controller: 'RoundsController',
+        controllerAs: 'vm'
       })
       .state('swiss.standings', {
         url:'/standings',
