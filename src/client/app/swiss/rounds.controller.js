@@ -5,15 +5,16 @@
     .module('mtgPairings.swiss')
     .controller('RoundsController', RoundsController);
 
-  RoundsController.$inject = ['Player', 'Round'];
+  RoundsController.$inject = ['$state', 'Player', 'Round'];
 
   /**
    * Controller for the rounds view.
    *
+   * @param {Object} $state Angular's service for managing state.
    * @param {Object} Player Our service for managing Players.
    * @param {Object} Round  Our service for managing Rounds.
    */
-  function RoundsController(Player, Round) {
+  function RoundsController($state, Player, Round) {
     var vm = this;
     vm.clearSelectedPairingResult = clearSelectedPairingResult;
     vm.createPairings = createPairings;
@@ -222,11 +223,22 @@
      * Submit the selected pairing's results. Mark pairing as done.
      */
     function submitMatchResults() {
+      var outstandingPairings;
+
       if (vm.selectedPairing) {
         vm.selectedPairing.done = true;
-
         vm.selectedRound.save();
         vm.selectedPairing = null;
+
+        outstandingPairings = vm.selectedRound.pairings.filter(function(pairing) {
+          return !pairing.done;
+        });
+
+        if (outstandingPairings.length === 0) {
+          vm.selectedRound.done = true
+          vm.selectedRound.save();
+          $state.go('swiss.standings');
+        }
       }
     }
   }

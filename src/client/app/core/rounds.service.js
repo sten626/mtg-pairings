@@ -24,6 +24,7 @@
     function Round(roundData) {
       angular.extend(this, {
         id: nextId(),
+        done: false,
         pairings: []
       });
 
