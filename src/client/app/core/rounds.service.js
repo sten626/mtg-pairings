@@ -112,24 +112,28 @@
      * @return {Array} All existing Rounds.
      */
     function query() {
-      var i;
       var maxId = 0;
-      var round;
-      var roundsString = localStorage.getItem('rounds');
-      var roundsData = roundsString ? angular.fromJson(roundsString) : [];
+      var roundsString;
+      var roundsData;
 
-      rounds.length = 0;
+      // If rounds is empty, fetch from localStorage.
+      if (rounds.length === 0) {
+        roundsString = localStorage.getItem('rounds');
+        roundsData = roundsString ? angular.fromJson(roundsString) : [];
 
-      for (i = 0; i < roundsData.length; i++) {
-        if (roundsData[i].id > maxId) {
-          maxId = roundsData[i].id;
-        }
+        roundsData.forEach(function(roundData) {
+          var round;
 
-        round = new Round(roundsData[i]);
-        round.save();
+          if (roundData.id > maxId) {
+            maxId = roundData.id;
+          }
+
+          round = new Round(roundData);
+          round.save();
+        });
+
+        nextId.id = maxId + 1;
       }
-
-      nextId.id = maxId + 1;
 
       return rounds;
     }

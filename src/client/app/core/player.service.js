@@ -55,7 +55,9 @@
       var i;
       var key;
 
-      query();
+      if (players.length === 0) {
+        query();
+      }
 
       if (playerData) {
         for (i = 0; i < players.length; i++) {
@@ -97,24 +99,28 @@
      * @return {Array} An array of all the existing Players.
      */
     function query() {
-      var i;
       var maxId = 0;
-      var player;
-      var playersString = localStorage.getItem('players');
-      var playersData = playersString ? angular.fromJson(playersString) : [];
+      var playersString;
+      var playersData;
 
-      players = [];
+      // If players is empty, fetch from localStorage.
+      if (players.length === 0) {
+        playersString = localStorage.getItem('players');
+        playersData = playersString ? angular.fromJson(playersString) : [];
 
-      for (i = 0; i < playersData.length; i++) {
-        if (playersData[i].id > maxId) {
-          maxId = playersData[i].id;
-        }
+        playersData.forEach(function(playerData) {
+          var player;
 
-        player = new Player(playersData[i]);
-        player.save();
+          if (playerData.id > maxId) {
+            maxId = playerData.id;
+          }
+
+          player = new Player(playerData);
+          player.save();
+        });
+
+        nextId.id = maxId + 1;
       }
-
-      nextId.id = maxId + 1;
 
       return players;
     }
