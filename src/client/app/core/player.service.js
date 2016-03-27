@@ -5,9 +5,17 @@
     .module('mtgPairings.core')
     .factory('Player', PlayerService);
 
+  /**
+   * Service for managing players.
+   */
   function PlayerService() {
     var players = [];
 
+    /**
+     * Constructor for a Player object.
+     *
+     * @param {Object} playerData Properties of the player being created.
+     */
     function Player(playerData) {
       if (playerData) {
         angular.extend(this, {
@@ -16,7 +24,6 @@
         });
 
         angular.extend(this, playerData);
-        players.push(this);
       }
     }
 
@@ -36,6 +43,13 @@
 
     //////////
 
+    /**
+     * Searches for a single player in storage which matches the data given.
+     *
+     * @param  {Object} playerData An object containing one or more player
+     *                             properties.
+     * @return {Object|null}       The Player found, or null otherwise.
+     */
     function get(playerData) {
       var failed;
       var i;
@@ -64,6 +78,11 @@
       return null;
     }
 
+    /**
+     * Gets the next ID to use for a newly created Player.
+     *
+     * @return {Number} The next ID to use.
+     */
     function nextId() {
       if (!nextId.id) {
         nextId.id = 1;
@@ -72,9 +91,15 @@
       return nextId.id++;
     }
 
+    /**
+     * Loads all Players for localStorage and returns them.
+     *
+     * @return {Array} An array of all the existing Players.
+     */
     function query() {
       var i;
       var maxId = 0;
+      var player;
       var playersString = localStorage.getItem('players');
       var playersData = playersString ? angular.fromJson(playersString) : [];
 
@@ -85,7 +110,8 @@
           maxId = playersData[i].id;
         }
 
-        new Player(playersData[i]);
+        player = new Player(playersData[i]);
+        player.save();
       }
 
       nextId.id = maxId + 1;
@@ -93,16 +119,34 @@
       return players;
     }
 
+    /**
+     * Calculates the recommended number of rounds, based on the number of
+     * players.
+     *
+     * @return {Number} The recommended number of rounds.
+     */
     function recommendedNumberOfRounds() {
       return Math.max(Math.ceil(Math.log2(players.length)), 3);
     }
 
+    /**
+     * Delete the Player from the players array and from localStorage.
+     */
     function remove() {
+      /* jshint validthis: true */
       players.splice(players.indexOf(this), 1);
       localStorage.setItem('players', angular.toJson(players));
     }
 
+    /**
+     * Adds the Player to the players array, and save to localStorage.
+     */
     function save() {
+      /* jshint validthis: true */
+      if (players.indexOf(this) === -1) {
+        players.push(this);
+      }
+
       localStorage.setItem('players', angular.toJson(players));
     }
 

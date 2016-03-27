@@ -7,9 +7,20 @@
 
   RoundService.$inject = ['Player'];
 
+  /**
+   * Service for managing Rounds.
+   *
+   * @param {Object} Player The Player service, which lets us interact with the
+   *                        players.
+   */
   function RoundService(Player) {
     var rounds = [];
 
+    /**
+     * Constructor for a Round.
+     *
+     * @param {Object} roundData Properties to apply to the new Round.
+     */
     function Round(roundData) {
       angular.extend(this, {
         id: nextId(),
@@ -19,8 +30,6 @@
       if (roundData) {
         angular.extend(this, roundData);
       }
-
-      rounds.push(this);
     }
 
     angular.extend(Round, {
@@ -32,20 +41,15 @@
       save: save
     };
 
-    /*
-    var service = {
-      generatePairings: generatePairings,
-      getRounds: getRounds,
-      startRound: startRound
-    };
-    var nextId = 1;
-    */
-
     return Round;
 
     //////////
 
+    /**
+     * Generate pairings for the Round.
+     */
     function generatePairings() {
+      /* jshint validthis: true */
       var player1;
       var player2;
       var shuffledPlayers;
@@ -89,6 +93,11 @@
       }
     }
 
+    /**
+     * Get the next ID to use for new Rounds.
+     *
+     * @return {Number} The next ID to use.
+     */
     function nextId() {
       if (!nextId.id) {
         nextId.id = 1;
@@ -97,9 +106,15 @@
       return nextId.id++;
     }
 
+    /**
+     * Fetch all Rounds for localStorage and return them.
+     *
+     * @return {Array} All existing Rounds.
+     */
     function query() {
       var i;
       var maxId = 0;
+      var round;
       var roundsString = localStorage.getItem('rounds');
       var roundsData = roundsString ? angular.fromJson(roundsString) : [];
 
@@ -110,7 +125,8 @@
           maxId = roundsData[i].id;
         }
 
-        new Round(roundsData[i]);
+        round = new Round(roundsData[i]);
+        round.save();
       }
 
       nextId.id = maxId + 1;
@@ -118,22 +134,16 @@
       return rounds;
     }
 
+    /**
+     * Add the Round to the rounds array and save to localStorage.
+     */
     function save() {
+      /* jshint validthis: true */
+      if (rounds.indexOf(this) === -1) {
+        rounds.push(this);
+      }
+
       localStorage.setItem('rounds', angular.toJson(rounds));
-    }
-
-    function getRounds() {
-      rounds = angular.fromJson(localStorage.getItem('rounds'));
-      return rounds;
-    }
-
-    function startRound(roundNum) {
-      rounds.push({
-        id: roundNum,
-        pairings: []
-      });
-
-      return rounds;
     }
   }
 })();

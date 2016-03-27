@@ -10,7 +10,7 @@
   /**
    * Controller for the Swiss views.
    *
-   * @param {Object} $state ui-router's state object.
+   * @param {Object} Round Our service for managing Rounds.
    */
   function SwissController(Round) {
     var rounds;
@@ -22,10 +22,18 @@
 
     ////////////
 
+    /**
+     * Initialize the swiss controller/view.
+     */
     function activate() {
       rounds = Round.query();
     }
 
+    /**
+     * Determines whether the Rounds nav pill should be shown.
+     *
+     * @return {Boolean} True if pill should be shown, false otherwise.
+     */
     function showRoundsPill() {
       if (rounds.length > 0) {
         return true;
