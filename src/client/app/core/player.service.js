@@ -20,11 +20,18 @@
       if (playerData) {
         angular.extend(this, {
           id: nextId(),
+          byes: 0,
+          gamePoints: 0,
+          gameWinPercentage: 0,
+          gamesPlayed: 0,
           matchPoints: 0,
+          matchWinPercentage: 0,
           matchesDrawn: 0,
           matchesPlayed: 0,
           matchesWon: 0,
           opponentIds: [],
+          opponentsGameWinPercentage: 0,
+          opponentsMatchWinPercentage: 0,
           name: ''
         });
 

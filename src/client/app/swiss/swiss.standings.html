@@ -26,11 +26,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="player in swiss.players | filter: swiss.standingsSearchFilter">
+        <tr ng-repeat="player in vm.players | filter: swiss.standingsSearchFilter">
           <td>{{player.rank}}</td>
           <td>{{player.name}}</td>
           <td>{{player.matchPoints}}</td>
-          <td>{{player.matchesPlayed}}/{{player.matchWins}}/{{player.matchDraws}}/{{player.matchByes}}</td>
+          <td>{{player.matchesPlayed}}/{{player.matchesWon}}/{{player.matchesDrawn}}/{{player.byes}}</td>
           <td>{{player.opponentsMatchWinPercentage}}</td>
           <td>{{player.gameWinPercentage}}</td>
           <td>{{player.opponentsGameWinPercentage}}</td>

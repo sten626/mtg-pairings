@@ -235,7 +235,8 @@
         });
 
         if (outstandingPairings.length === 0) {
-          vm.selectedRound.done = true;
+          vm.selectedRound.done = true
+          vm.selectedRound.save();
           $state.go('swiss.standings');
         }
       }

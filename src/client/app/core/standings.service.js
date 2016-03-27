@@ -23,13 +23,44 @@
     //////////
 
     /**
+     * Calculate a player's OMW% and OGW%.
+     *
+     * @param {Object} player The player to calculate stats for.
+     */
+    function calculateOpponentStats(player) {
+      var opponentsGameSum = 0;
+      var opponentsMatchSum = 0;
+
+      player.opponentsGameWinPercentage = 0;
+      player.opponentsMatchWinPercentage = 0;
+
+      player.opponentIds.forEach(function(opponentId) {
+        var opponent = Player.get({id: opponentId});
+
+        opponentsGameSum += opponent.gameWinPercentage;
+        opponentsMatchSum += opponent.matchWinPercentage;
+      });
+
+      player.opponentsGameWinPercentage = opponentsGameSum /
+          player.opponentIds.length;
+      player.opponentsMatchWinPercentage = opponentsMatchSum /
+          player.opponentIds.length;
+      player.save();
+    }
+
+    /**
      * Calculate the stats for a given Player.
      *
      * @param {Object} player The Player to calculate stats for.
-     * @param {Object} rounds An array of completed rounds to pull stats from.
+     * @param {Array}  rounds An array of completed rounds to pull stats from.
      */
     function calculatePlayerStats(player, rounds) {
+      player.byes = 0;
+      player.gamePoints = 0;
+      player.gameWinPercentage = 0;
+      player.gamesPlayed = 0;
       player.matchPoints = 0;
+      player.matchWinPercentage = 0;
       player.matchesDrawn = 0;
       player.matchesPlayed = 0;
       player.matchesWon = 0;
@@ -44,12 +75,22 @@
           pairing = pairings[i];
 
           if (pairing.player1Id === player.id) {
+            player.gamePoints += pairing.player1GameWins * 3;
+            player.gamePoints += pairing.draws;
+            player.gamesPlayed += pairing.player1GameWins +
+                pairing.player2GameWins + pairing.draws;
             player.matchesPlayed += 1;
             player.opponentIds.push(pairing.player2Id);
 
             if (pairing.player1GameWins > pairing.player2GameWins) {
               player.matchPoints += 3;
-              player.matchesWon += 1;
+
+              if (pairing.player2Id !== -1) {
+                player.matchesWon += 1;
+              } else {
+                // Had a bye.
+                player.byes += 1;
+              }
             } else if (pairing.player1GameWins === pairing.player2GameWins) {
               player.matchPoints += 1;
               player.matchesDrawn += 1;
@@ -57,6 +98,10 @@
 
             break;
           } else if (pairing.player2Id === player.id) {
+            player.gamePoints += pairing.player2GameWins * 3;
+            player.gamePoints += pairing.draws;
+            player.gamesPlayed += pairing.player1GameWins +
+                pairing.player2GameWins + pairing.draws;
             player.matchesPlayed += 1;
             player.opponentIds.push(pairing.player1Id);
 
@@ -72,20 +117,33 @@
           }
         }
       });
+
+      player.matchWinPercentage = Math.max(+(player.matchPoints /
+          (player.matchesPlayed * 3) * 100).toFixed(4), 33.3333);
+      player.gameWinPercentage = Math.max(+(player.gamePoints /
+          (player.gamesPlayed * 3) * 100).toFixed(4), 33.3333);
+
+      player.save();
     }
 
     /**
      * Calculate the standings for all players considering all completed rounds.
      */
     function calculateStandings() {
+      console.log('calculate');
+      var i;
       var players = Player.query();
       var rounds = Round.query().filter(function(round) {
         return round.done;
       });
 
-      players.forEach(function(player) {
-        calculatePlayerStats(player, rounds);
-      });
+      for (i = 0; i < players.length; i++) {
+        calculatePlayerStats(players[i], rounds);
+      }
+
+      for (i = 0; i < players.length; i++) {
+        calculateOpponentStats(players[i]);
+      }
     }
   }
 })();
