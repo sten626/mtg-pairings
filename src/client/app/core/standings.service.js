@@ -75,44 +75,12 @@
           pairing = pairings[i];
 
           if (pairing.player1Id === player.id) {
-            player.gamePoints += pairing.player1GameWins * 3;
-            player.gamePoints += pairing.draws;
-            player.gamesPlayed += pairing.player1GameWins +
-                pairing.player2GameWins + pairing.draws;
-            player.matchesPlayed += 1;
-            player.opponentIds.push(pairing.player2Id);
-
-            if (pairing.player1GameWins > pairing.player2GameWins) {
-              player.matchPoints += 3;
-
-              if (pairing.player2Id !== -1) {
-                player.matchesWon += 1;
-              } else {
-                // Had a bye.
-                player.byes += 1;
-              }
-            } else if (pairing.player1GameWins === pairing.player2GameWins) {
-              player.matchPoints += 1;
-              player.matchesDrawn += 1;
-            }
-
+            scorePoints(player, pairing.player2Id, pairing.player1GameWins,
+                pairing.player2GameWins, pairing.draws);
             break;
           } else if (pairing.player2Id === player.id) {
-            player.gamePoints += pairing.player2GameWins * 3;
-            player.gamePoints += pairing.draws;
-            player.gamesPlayed += pairing.player1GameWins +
-                pairing.player2GameWins + pairing.draws;
-            player.matchesPlayed += 1;
-            player.opponentIds.push(pairing.player1Id);
-
-            if (pairing.player2GameWins > pairing.player1GameWins) {
-              player.matchPoints += 3;
-              player.matchesWon += 1;
-            } else if (pairing.player2GameWins === pairing.player1GameWins) {
-              player.matchPoints += 1;
-              player.matchesDrawn += 1;
-            }
-
+            scorePoints(player, pairing.player1Id, pairing.player2GameWins,
+                pairing.player1GameWins, pairing.draws);
             break;
           }
         }
@@ -160,6 +128,9 @@
      *                    higher, 0 if equal.
      */
     function playerStandingsComparator(a, b) {
+      /* jshint -W074 */
+      // Ignoring complexity warning since there's not much we can do about this
+      // to make comparing simpler.
       if (a.matchPoints > b.matchPoints) {
         return -1;
       } else if (a.matchPoints < b.matchPoints) {
@@ -186,6 +157,38 @@
       }
 
       return 0;
+    }
+
+    /**
+     * Track match and game points that a player gained against a given
+     * opponent.
+     *
+     * @param {Object} player     The player to track points for.
+     * @param {Number} opponentId That player's opponent's ID.
+     * @param {Number} gameWins   The number of games in the match the player
+     *                            won.
+     * @param {Number} gameLosses The number of games the player lost.
+     * @param {Number} draws      The number of games in the match that drew.
+     */
+    function scorePoints(player, opponentId, gameWins, gameLosses, draws) {
+      player.gamePoints += gameWins * 3;
+      player.gamePoints += draws;
+      player.gamesPlayed += gameWins + gameLosses + draws;
+      player.matchesPlayed += 1;
+
+      if (opponentId !== -1) {
+        player.opponentIds.push(opponentId);
+      }
+
+      if (gameWins > gameLosses) {
+        player.matchPoints += 3;
+        player.matchesWon += 1;
+
+        if (opponentId === -1) {
+          // Had a bye.
+          player.byes += 1;
+        }
+      }
     }
   }
 })();

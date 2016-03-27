@@ -230,12 +230,13 @@
         vm.selectedRound.save();
         vm.selectedPairing = null;
 
-        outstandingPairings = vm.selectedRound.pairings.filter(function(pairing) {
+        outstandingPairings = vm.selectedRound.pairings
+            .filter(function(pairing) {
           return !pairing.done;
         });
 
         if (outstandingPairings.length === 0) {
-          vm.selectedRound.done = true
+          vm.selectedRound.done = true;
           vm.selectedRound.save();
           $state.go('swiss.standings');
         }
