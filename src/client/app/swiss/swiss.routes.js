@@ -35,7 +35,9 @@
       })
       .state('swiss.standings', {
         url:'/standings',
-        templateUrl: 'app/swiss/swiss.standings.html'
+        templateUrl: 'app/swiss/swiss.standings.html',
+        controller: 'StandingsController',
+        controllerAs: 'vm'
       });
   }
 })();
