@@ -17,6 +17,7 @@
     var vm = this;
 
     vm.showRoundsPill = showRoundsPill;
+    vm.showStandingsPill = showStandingsPill;
 
     activate();
 
@@ -35,11 +36,20 @@
      * @return {Boolean} True if pill should be shown, false otherwise.
      */
     function showRoundsPill() {
-      if (rounds.length > 0) {
-        return true;
-      }
+      return rounds.length > 0;
+    }
 
-      return false;
+    /**
+     * Determines whether the Standings nav pill should be shown.
+     *
+     * @return {Boolean} True if pill should be shown, false otherwise.
+     */
+    function showStandingsPill() {
+      var completeRounds = rounds.filter(function(round) {
+        return round.done;
+      });
+
+      return completeRounds.length > 0;
     }
   }
 })();

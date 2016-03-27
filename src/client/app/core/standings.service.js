@@ -130,20 +130,62 @@
      * Calculate the standings for all players considering all completed rounds.
      */
     function calculateStandings() {
-      console.log('calculate');
-      var i;
       var players = Player.query();
+      var rank = 1;
       var rounds = Round.query().filter(function(round) {
         return round.done;
       });
 
-      for (i = 0; i < players.length; i++) {
-        calculatePlayerStats(players[i], rounds);
+      players.forEach(function(player) {
+        calculatePlayerStats(player, rounds);
+      });
+
+      players.forEach(function(player) {
+        calculateOpponentStats(player);
+      });
+
+      players.sort(playerStandingsComparator);
+
+      players.forEach(function(player) {
+        player.rank = rank++;
+      });
+    }
+
+    /**
+     * Comparator for sorting players for standings.
+     *
+     * @param  {Object} a The first player to be compared.
+     * @param  {Object} b The second player to be compared.
+     * @return {Number}   Negative if a ranks higher, positive if b ranks
+     *                    higher, 0 if equal.
+     */
+    function playerStandingsComparator(a, b) {
+      if (a.matchPoints > b.matchPoints) {
+        return -1;
+      } else if (a.matchPoints < b.matchPoints) {
+        return 1;
       }
 
-      for (i = 0; i < players.length; i++) {
-        calculateOpponentStats(players[i]);
+      if (a.opponentsMatchWinPercentage > b.opponentsMatchWinPercentage) {
+        return -1;
+      } else if (a.opponentsMatchWinPercentage <
+          b.opponentsMatchWinPercentage) {
+        return 1;
       }
+
+      if (a.gameWinPercentage > b.gameWinPercentage) {
+        return -1;
+      } else if (a.gameWinPercentage < b.gameWinPercentage) {
+        return 1;
+      }
+
+      if (a.opponentsGameWinPercentage > b.opponentsGameWinPercentage) {
+        return -1;
+      } else if (a.opponentsGameWinPercentage < b.opponentsGameWinPercentage) {
+        return 1;
+      }
+
+      return 0;
     }
   }
 })();

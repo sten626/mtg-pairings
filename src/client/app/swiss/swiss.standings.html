@@ -5,7 +5,7 @@
         <label for="standings-search" class="col-sm-1 control-label">Search</label>
         <div class="col-sm-3">
           <input type="search" class="form-control" id="standings-search"
-              placeholder="Player Name" ng-model="swiss.standingsSearch">
+              placeholder="Player Name" ng-model="vm.searchQuery">
         </div>
       </div>
     </div>
@@ -26,7 +26,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="player in vm.players | filter: swiss.standingsSearchFilter">
+        <tr ng-repeat="player in vm.players | filter: vm.standingsFilter">
           <td>{{player.rank}}</td>
           <td>{{player.name}}</td>
           <td>{{player.matchPoints}}</td>

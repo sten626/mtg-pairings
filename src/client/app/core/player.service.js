@@ -32,7 +32,8 @@
           opponentIds: [],
           opponentsGameWinPercentage: 0,
           opponentsMatchWinPercentage: 0,
-          name: ''
+          name: '',
+          rank: 0
         });
 
         angular.extend(this, playerData);
