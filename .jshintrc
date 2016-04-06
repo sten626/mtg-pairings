@@ -24,5 +24,6 @@
   "unused": true,
 
   "browser": true,
+  "jasmine": true,
   "node": true
 }
