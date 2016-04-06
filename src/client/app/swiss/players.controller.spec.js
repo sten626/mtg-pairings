@@ -1,12 +1,15 @@
-(function() {
-  'use strict';
+describe('PlayersController', function() {
+  var ctrl;
 
-  describe('PlayersController', function() {
-    var $controller;
+  beforeEach(module('mtgPairings.swiss'));
+  beforeEach(inject(function($controller) {
+    ctrl = $controller('PlayersController', {});
+  }));
 
-    beforeEach(module('mtgPairings.swiss'));
-    beforeEach(inject(function(_$controller_) {
-      $controller = _$controller_;
-    }));
+  it('should add a new player', function() {
+    ctrl.playerName = 'Steven';
+    ctrl.addPlayer();
+    expect(ctrl.playerName).toEqual('');
+    expect(ctrl.players.length).toEqual(1);
   });
-})();
+});

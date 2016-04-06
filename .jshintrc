@@ -18,6 +18,7 @@
   "nocomma": true,
   "nonbsp": true,
   "nonew": true,
+  "predef": ["inject"],
   "singleGroups": true,
   "strict": true,
   "undef": true,
