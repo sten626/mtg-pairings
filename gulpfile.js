@@ -1,9 +1,12 @@
 'use strict';
 var gulp = require('gulp');
-var jshint = require('gulp-jshint');
-var jscs = require('gulp-jscs');
-var jscsStylish = require('gulp-jscs-stylish');
+var karma = require('karma').server;
 var paths = require('./gulp.config.json');
+var plug = require('gulp-load-plugins')();
+
+var env = plug.util.env;
+var log = plug.util.log;
+var port = process.env.PORT || 7203;
 
 gulp.task('lint', function() {
   return gulp.src(paths.js)
@@ -16,3 +19,25 @@ gulp.task('jscs', function() {
     .pipe(jscs())
     .pipe(jscsStylish());
 });
+
+gulp.task('test', function(done) {
+  startTests(true, done);
+});
+
+//////////
+
+/**
+ * Start the tests.
+ *
+ * @param {Boolean}  singleRun True to run once, false to keep running.
+ * @param {Function} done      Callback to call when done.
+ */
+function startTests(singleRun, done) {
+  karma.start({
+    configFile: __dirname + '/karma.conf.js',
+    //exclude: excludeFiles,
+    singleRun: !!singleRun
+  }, function() {
+    done();
+  });
+}

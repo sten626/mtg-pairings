@@ -1,71 +1,61 @@
-// Karma configuration
-// Generated on Wed Apr 06 2016 13:29:55 GMT-0600 (Canada Central Standard Time)
+'use strict';
 
 module.exports = function(config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '',
-
+    basePath: './',
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine'],
-
+    frameworks: ['mocha', 'chai', 'sinon', 'chai-sinon'],
 
     // list of files / patterns to load in the browser
     files: [
-      'node_modules/jquery/dist/jquery.min.js',
-      'node_modules/bootstrap/dist/js/bootstrap.min.js',
-      'node_modules/angular/angular.min.js',
-      'node_modules/angular-mocks/angular-mocks.js',
-      'node_modules/angular-ui-router/release/angular-ui-router.min.js',
-      'src/client/app/mtgPairings.module.js',
-      'src/client/app/**/*.module.js',
-      'src/client/app/**/*.service.js',
-      'src/client/app/**/*.controller.js',
-      'src/client/app/swiss/players.controller.spec.js'
+      './node_modules/jquery/dist/jquery.js',
+      './node_modules/bootstrap/dist/js/bootstrap.js',
+      './node_modules/angular/angular.js',
+      './node_modules/angular-ui-router/release/angular-ui-router.js',
+      './node_modules/angular-mocks/angular-mocks.js',
+      './src/client/app/mtgPairings.module.js',
+      './src/client/app/**/*.module.js',
+      './src/client/app/**/*.service.js',
+      './src/client/app/**/*.routes.js',
+      './src/client/app/**/*.controller.js'
     ],
-
 
     // list of files to exclude
-    exclude: [
-    ],
-
+    exclude: [],
 
     // preprocess matching files before serving them to the browser
-    // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors: {
-    },
-
+    // available preprocessors:
+    // https://npmjs.org/browse/keyword/karma-preprocessor
+    preprocessors: {},
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
     reporters: ['progress'],
 
-
     // web server port
     port: 9876,
-
 
     // enable / disable colors in the output (reporters and logs)
     colors: true,
 
-
     // level of logging
-    // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
+    // possible values: config.LOG_DISABLE || config.LOG_ERROR ||
+    // config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
     logLevel: config.LOG_INFO,
 
-
-    // enable / disable watching file and executing tests whenever any file changes
+    // enable / disable watching file and executing tests whenever any file
+    // changes
     autoWatch: false,
 
-
     // start these browsers
-    // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
+    // available browser launchers:
+    // https://npmjs.org/browse/keyword/karma-launcher
     browsers: ['Chrome'],
-
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
